@@ -9,11 +9,11 @@ namespace MyDishesApp.Repository.Services
     /// </summary>
     public interface IIngredientRepository
     {
-        Task<IEnumerable<Ingredient>> GetIngredientsForDish(int dishId);
-        Task<IEnumerable<Ingredient>> GetIngredientsForDish(int dishId, IEnumerable<int> ingredientIds);
-        Task<Ingredient> GetIngredientForDish(int dishId, int ingredientId);
+        Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId);
+        Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId, IEnumerable<int> ingredientIds);
+        Task<Ingredient> GetIngredientForDishAsync(int dishId, int ingredientId);
         void DeleteIngredientFromDish(Ingredient ingredient);
-        Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantities(IEnumerable<Ingredient> newIngredientEntities, int dishId);
+        Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(IEnumerable<Ingredient> newIngredientEntities, int dishId);
 
         /// <summary>
         /// Method for saving the context

@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using MyDishesApp.Repository.Data.Entities;
+using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Data.Entities;
-using MyDishesApp.Repository.Services;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -54,7 +54,7 @@ namespace MyDishesApp.WebApi.Controllers
 
             if (_userInfoService.Role == "Administrator")
             {
-                dishEntities = await _dishRepository.GetDishes();
+                dishEntities = await _dishRepository.GetDishesAsync().ToList();
             }
             else
             {
@@ -64,7 +64,7 @@ namespace MyDishesApp.WebApi.Controllers
                 }
 
                 // TODO: Add GetDishesForManager...
-                dishEntities = await _dishRepository.GetDishes();
+                dishEntities = await _dishRepository.GetDishesAsync().ToList();
             }
 
             var dishes = Mapper.Map<IEnumerable<DishDto>>(dishEntities);
@@ -76,7 +76,7 @@ namespace MyDishesApp.WebApi.Controllers
         [Authorize(Policy = "UserMustBeAdministrator")]
         public async Task<IActionResult> GetDish(int dishId)
         {
-            var dishFromRepo = await _dishRepository.GetDish(dishId);
+            var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
 
             if (dishFromRepo == null)
             {
@@ -118,7 +118,7 @@ namespace MyDishesApp.WebApi.Controllers
             //    dishEntity.ManagerId = userIdAsGuid;
             //}
 
-            await _dishRepository.AddDish(dishEntity);
+            await _dishRepository.AddDishAsync(dishEntity);
 
             try
             {
@@ -157,7 +157,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return BadRequest();
             }
 
-            var dishFromRepo = await _dishRepository.GetDish(dishId);
+            var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
             if (dishFromRepo == null)
             {
                 return BadRequest();
@@ -179,8 +179,6 @@ namespace MyDishesApp.WebApi.Controllers
 
             Mapper.Map(dishToPatch, dishFromRepo);
 
-            await _dishRepository.UpdateDish(dishFromRepo);
-
             if (!await _dishRepository.SaveAsync())
             {
                 throw new Exception("Updating a dish failed on save.");
@@ -200,8 +198,8 @@ namespace MyDishesApp.WebApi.Controllers
             }
 
             // If dish (entity) exists, get it and then remove it.
-            var dishEntity = await _dishRepository.GetDish(dishId);
-            await _dishRepository.DeleteDish(dishEntity);
+            var dishEntity = await _dishRepository.GetDishAsync(dishId);
+            _dishRepository.DeleteDish(dishEntity);
 
             // Try to save database
             if (!await _dishRepository.SaveAsync())

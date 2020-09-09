@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyDishesApp.WebApi.Authorization;
-using MyDishesApp.WebApi.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Linq;

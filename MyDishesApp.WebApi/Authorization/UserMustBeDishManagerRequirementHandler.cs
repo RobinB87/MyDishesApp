@@ -2,18 +2,16 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using MyDishesApp.Repository.Services;
 
 namespace MyDishesApp.WebApi.Authorization
 {
-    public class UserMustBeDishManagerRequirementHandler
-        : AuthorizationHandler<UserMustBeDishManagerRequirement>
+    public class UserMustBeDishManagerRequirementHandler : AuthorizationHandler<UserMustBeDishManagerRequirement>
     {
-        private readonly IDishRepository _dishInfoRepository;
         private readonly IUserInfoService _userInfoService;
 
-        public UserMustBeDishManagerRequirementHandler(IDishRepository dishInfoRepository, IUserInfoService userInfoService)
+        public UserMustBeDishManagerRequirementHandler(IUserInfoService userInfoService)
         {
-            _dishInfoRepository = dishInfoRepository;
             _userInfoService = userInfoService;
         }
 

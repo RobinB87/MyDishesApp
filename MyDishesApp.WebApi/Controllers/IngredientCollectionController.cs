@@ -61,7 +61,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return NotFound();
             }
 
-            var ingredientEntities = await _ingredientRepository.GetIngredientsForDish(dishId, ingredientIds);
+            var ingredientEntities = await _ingredientRepository.GetIngredientsForDishAsync(dishId, ingredientIds);
 
             if (ingredientIds.Count() != ingredientEntities.Count())
             {
@@ -99,7 +99,7 @@ namespace MyDishesApp.WebApi.Controllers
             // Add ingredients to dish. If ingredientname already exists, quantities will be summed up.
             try
             {
-                await _ingredientRepository.AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantities(newIngredientEntities, dishId);
+                await _ingredientRepository.AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(newIngredientEntities, dishId);
             }
             catch (Exception ex)
             {

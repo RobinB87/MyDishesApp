@@ -53,7 +53,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return NotFound();
             }
 
-            var ingredientFromRepo = await _ingredientRepository.GetIngredientForDish(dishId, ingredientId);
+            var ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
 
             if (ingredientFromRepo == null)
             {
@@ -71,7 +71,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return NotFound();
             }
 
-            var ingredientsFromRepo = await _ingredientRepository.GetIngredientsForDish(dishId);
+            var ingredientsFromRepo = await _ingredientRepository.GetIngredientsForDishAsync(dishId);
 
             if (ingredientsFromRepo == null)
             {
@@ -97,7 +97,7 @@ namespace MyDishesApp.WebApi.Controllers
             }
 
             // Get ingredient entity from repo, to be patched.
-            Ingredient ingredientFromRepo = await _ingredientRepository.GetIngredientForDish(dishId, ingredientId);
+            Ingredient ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
 
             if (ingredientFromRepo == null)
             {
@@ -136,7 +136,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return NotFound();
             }
 
-            var ingredientFromRepository = await _ingredientRepository.GetIngredientForDish(dishId, ingredientId);
+            var ingredientFromRepository = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
             if (ingredientFromRepository == null)
             {
                 return BadRequest();

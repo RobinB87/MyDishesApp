@@ -10,11 +10,10 @@ namespace MyDishesApp.Repository.Services
     public interface IDishRepository
     {
         Task<bool> DishExists(int dishId);
-        Task<IEnumerable<Dish>> GetDishes();
-        Task<Dish> GetDish(int dishId);
-        Task AddDish(Dish dish);
-        Task UpdateDish(Dish dish);
-        Task DeleteDish(Dish dish);
+        Task<IEnumerable<Dish>> GetDishesAsync();
+        Task<Dish> GetDishAsync(int dishId);
+        Task AddDishAsync(Dish dish);
+        void DeleteDish(Dish dish);
 
         /// <summary>
         /// Method for saving the context

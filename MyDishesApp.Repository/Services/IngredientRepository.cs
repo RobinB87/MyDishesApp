@@ -27,26 +27,26 @@ namespace MyDishesApp.Repository.Services
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
         }
 
-        public async Task<IEnumerable<Ingredient>> GetIngredientsForDish(int dishId)
+        public async Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId)
         {
             return await _context.Ingredients.Where(i => i.DishId == dishId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Ingredient>> GetIngredientsForDish(int dishId, IEnumerable<int> ingredientIds)
+        public async Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId, IEnumerable<int> ingredientIds)
         {
             return await _context.Ingredients
                  .Where(i => i.DishId == dishId && ingredientIds.Contains(i.IngredientId)).ToListAsync();
         }
 
-        public async Task<Ingredient> GetIngredientForDish(int dishId, int ingredientId)
+        public async Task<Ingredient> GetIngredientForDishAsync(int dishId, int ingredientId)
         {
             return await _context.Ingredients
                 .Where(i => i.DishId == dishId && i.IngredientId == ingredientId).FirstOrDefaultAsync();
         }
 
-        public async Task AddIngredientToDish(int dishId, Ingredient ingredient)
+        public async Task AddIngredientToDishAsync(int dishId, Ingredient ingredient)
         {
-            var dish = await _dishRepository.GetDish(dishId);
+            var dish = await _dishRepository.GetDishAsync(dishId);
             if (dish == null)
             {
                 // throw an exception - this is a race condition
@@ -64,10 +64,10 @@ namespace MyDishesApp.Repository.Services
             _context.Ingredients.Remove(ingredient);
         }
 
-        public async Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantities(IEnumerable<Ingredient> newIngredientEntities, int dishId)
+        public async Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(IEnumerable<Ingredient> newIngredientEntities, int dishId)
         {
             // Get ingredients for dish and transform IEnumerable to List (for modification of list)
-            IEnumerable<Ingredient> existingIngredients = await GetIngredientsForDish(dishId);
+            IEnumerable<Ingredient> existingIngredients = await GetIngredientsForDishAsync(dishId);
             List<Ingredient> existingIngredientsToBeModified = existingIngredients.ToList();
 
             // Loop over new Ingredients and compare with existing ingredients.
@@ -92,7 +92,7 @@ namespace MyDishesApp.Repository.Services
                 if (!ingredientExists)
                 {
                     existingIngredientsToBeModified.Add(newIngredient);
-                    await AddIngredientToDish(dishId, newIngredient);
+                    await AddIngredientToDishAsync(dishId, newIngredient);
                     if (!await SaveAsync())
                     {
                         throw new Exception("Adding a collection of ingredients failed on save.");

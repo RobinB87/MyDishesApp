@@ -28,43 +28,27 @@ namespace MyDishesApp.Repository.Services
             return await _context.Dishes.AnyAsync(d => d.DishId == dishId);
         }
 
-        // TODO: Niet ToListen, dat moet je pas in de controller doen ivm performance.
-        // Dishes CRUD
-        public async Task<IEnumerable<Dish>> GetDishes()
+        public async Task<IEnumerable<Dish>> GetDishesAsync()
         {
             return await _context.Dishes.Include(i => i.Ingredients)
                 .OrderBy(d => d.Name).ToListAsync();
         }
 
-        public async Task<Dish> GetDish(int dishId)
+        public async Task<Dish> GetDishAsync(int dishId)
         {
             return await _context.Dishes.Include(i => i.Ingredients)
                 .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
         }
 
-        public async Task AddDish(Dish dish)
+        public async Task AddDishAsync(Dish dish)
         {
             await _context.Dishes.AddAsync(dish);
         }
 
-        // PUT UpdateDish - update fully
-        // PATCH PartiallyUpdateDish - update partially
-
-#pragma warning disable 1998
-        // disable async warning - no code 
-        public async Task UpdateDish(Dish dish)
-        {
-            // no code in this implementation
-        }
-#pragma warning restore 1998
-
-#pragma warning disable 1998
-        public async Task DeleteDish(Dish dish)
+        public void DeleteDish(Dish dish)
         {
             _context.Dishes.Remove(dish);
         }
-#pragma warning restore 1998
-        // pragma warning disable ivm await warning.
 
         /// <inheritdoc />
         public async Task<bool> SaveAsync()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -20,16 +21,16 @@ namespace MyDishesApp.Repository.Services
             _httpContextAccessor = httpContextAccessor
                 ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 
-            HttpContext currentContext = _httpContextAccessor.HttpContext;
+            var currentContext = _httpContextAccessor.HttpContext;
             if (currentContext == null || !currentContext.User.Identity.IsAuthenticated)
             {
                 return;
             }
 
-            UserId = Enumerable.FirstOrDefault<Claim>(currentContext.User.Claims, c => c.Type == "sub")?.Value;
-            FirstName = Enumerable.FirstOrDefault<Claim>(currentContext.User.Claims, c => c.Type == "given_name")?.Value;
-            LastName = Enumerable.FirstOrDefault<Claim>(currentContext.User.Claims, c => c.Type == "family_name")?.Value;
-            Role = Enumerable.FirstOrDefault<Claim>(currentContext.User.Claims, c => c.Type == "role")?.Value;
+            UserId = currentContext.User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            FirstName = currentContext.User.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value;
+            LastName = currentContext.User.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value;
+            Role = currentContext.User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
         }
     }
 }
