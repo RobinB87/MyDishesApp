@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.API", "MyDishesApp.API\MyDishesApp.API.csproj", "{1AD72D8B-6696-4500-9D65-EBD7834429C6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.IDP", "Marvin.IDP\Marvin.IDP.csproj", "{5648EEDE-7130-4412-A468-6F8A648ABCB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.Repository", "MyDishesApp.Repository\MyDishesApp.Repository.csproj", "{C4918A0E-6AB7-4432-9545-B14E0843DFD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.WebApi", "MyDishesApp.WebApi\MyDishesApp.WebApi.csproj", "{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1AD72D8B-6696-4500-9D65-EBD7834429C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AD72D8B-6696-4500-9D65-EBD7834429C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AD72D8B-6696-4500-9D65-EBD7834429C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AD72D8B-6696-4500-9D65-EBD7834429C6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
