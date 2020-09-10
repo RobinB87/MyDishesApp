@@ -44,114 +44,114 @@ namespace MyDishesApp.WebApi.Controllers
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
         }
 
-        // Get
-        [HttpGet("{ingredientId}")]
-        public async Task<IActionResult> GetIngredientForDish(int dishId, int ingredientId)
-        {
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //// Get
+        //[HttpGet("{ingredientId}")]
+        //public async Task<IActionResult> GetIngredientForDish(int dishId, int ingredientId)
+        //{
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            var ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
+        //    var ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
 
-            if (ingredientFromRepo == null)
-            {
-                return BadRequest();
-            }
+        //    if (ingredientFromRepo == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return Ok(Mapper.Map<IngredientDto>(ingredientFromRepo));
-        }
+        //    return Ok(Mapper.Map<IngredientDto>(ingredientFromRepo));
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetIngredientsForDish(int dishId)
-        {
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //[HttpGet]
+        //public async Task<IActionResult> GetIngredientsForDish(int dishId)
+        //{
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            var ingredientsFromRepo = await _ingredientRepository.GetIngredientsForDishAsync(dishId);
+        //    var ingredientsFromRepo = await _ingredientRepository.GetIngredientsForDishAsync(dishId);
 
-            if (ingredientsFromRepo == null)
-            {
-                return BadRequest();
-            }
+        //    if (ingredientsFromRepo == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return Ok(Mapper.Map<IngredientDto[]>(ingredientsFromRepo));
-        }
+        //    return Ok(Mapper.Map<IngredientDto[]>(ingredientsFromRepo));
+        //}
        
-        // Patch
-        [HttpPatch("{ingredientId}")]
-        public async Task<IActionResult> PartiallyUpdateIngredient(int dishId, int ingredientId,
-            [FromBody] JsonPatchDocument<IngredientForUpdateDto> jsonPatchDocument)
-        {
-            if (jsonPatchDocument == null)
-            {
-                return BadRequest();
-            }
+        //// Patch
+        //[HttpPatch("{ingredientId}")]
+        //public async Task<IActionResult> PartiallyUpdateIngredient(int dishId, int ingredientId,
+        //    [FromBody] JsonPatchDocument<IngredientForUpdateDto> jsonPatchDocument)
+        //{
+        //    if (jsonPatchDocument == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            // Get ingredient entity from repo, to be patched.
-            Ingredient ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
+        //    // Get ingredient entity from repo, to be patched.
+        //    Ingredient ingredientFromRepo = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
 
-            if (ingredientFromRepo == null)
-            {
-                return BadRequest();
-            }
+        //    if (ingredientFromRepo == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            IngredientForUpdateDto ingredientToPatch = Mapper.Map<IngredientForUpdateDto>(ingredientFromRepo);
+        //    IngredientForUpdateDto ingredientToPatch = Mapper.Map<IngredientForUpdateDto>(ingredientFromRepo);
 
-            jsonPatchDocument.ApplyTo(ingredientToPatch, ModelState);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+        //    jsonPatchDocument.ApplyTo(ingredientToPatch, ModelState);
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (!TryValidateModel(ingredientToPatch))
-            {
-                return BadRequest();
-            }
+        //    if (!TryValidateModel(ingredientToPatch))
+        //    {
+        //        return BadRequest();
+        //    }
 
-            Mapper.Map(ingredientToPatch, ingredientFromRepo);
+        //    Mapper.Map(ingredientToPatch, ingredientFromRepo);
 
-            if (!await _ingredientRepository.SaveAsync())
-            {
-                throw new Exception("Updating an ingredient failed on save.");
-            }
+        //    if (!await _ingredientRepository.SaveAsync())
+        //    {
+        //        throw new Exception("Updating an ingredient failed on save.");
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // Delete
-        [HttpDelete("{ingredientId}")]
-        public async Task<IActionResult> DeleteIngredientFromDish(int dishId, int ingredientId)
-        {
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //// Delete
+        //[HttpDelete("{ingredientId}")]
+        //public async Task<IActionResult> DeleteIngredientFromDish(int dishId, int ingredientId)
+        //{
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            var ingredientFromRepository = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
-            if (ingredientFromRepository == null)
-            {
-                return BadRequest();
-            }
+        //    var ingredientFromRepository = await _ingredientRepository.GetIngredientForDishAsync(dishId, ingredientId);
+        //    if (ingredientFromRepository == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _ingredientRepository.DeleteIngredientFromDish(ingredientFromRepository);
+        //    _ingredientRepository.DeleteIngredientFromDish(ingredientFromRepository);
 
-            if (!await _ingredientRepository.SaveAsync())
-            {
-                throw new Exception("Deleting an ingredient from dish failed on save.");
-            }
+        //    if (!await _ingredientRepository.SaveAsync())
+        //    {
+        //        throw new Exception("Deleting an ingredient from dish failed on save.");
+        //    }
 
-            // add logger / mailservice?
+        //    // add logger / mailservice?
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
     }
 }

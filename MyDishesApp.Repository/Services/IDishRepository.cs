@@ -14,8 +14,8 @@ namespace MyDishesApp.Repository.Services
         /// <summary>
         /// Get all dishes
         /// </summary>
-        Task<IEnumerable<Dish>> GetDishesAsync();
-        Task<Dish> GetDishAsync(int dishId);
+        //Task<IEnumerable<Dish>> GetDishesAsync();
+        //Task<Dish> GetDishAsync(int dishId);
         Task AddDishAsync(Dish dish);
         void DeleteDish(Dish dish);
 

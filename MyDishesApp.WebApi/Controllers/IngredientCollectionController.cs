@@ -46,74 +46,74 @@ namespace MyDishesApp.WebApi.Controllers
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
         }
 
-        // Get
-        [HttpGet("({ingredientIds})", Name = "GetIngredientCollection")]
-        public async Task<IActionResult> GetIngredientCollection(int dishId,
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ingredientIds)
-        {
-            if (ingredientIds == null || !ingredientIds.Any())
-            {
-                return BadRequest();
-            }
+        //// Get
+        //[HttpGet("({ingredientIds})", Name = "GetIngredientCollection")]
+        //public async Task<IActionResult> GetIngredientCollection(int dishId,
+        //    [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ingredientIds)
+        //{
+        //    if (ingredientIds == null || !ingredientIds.Any())
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            var ingredientEntities = await _ingredientRepository.GetIngredientsForDishAsync(dishId, ingredientIds);
+        //    var ingredientEntities = await _ingredientRepository.GetIngredientsForDishAsync(dishId, ingredientIds);
 
-            if (ingredientIds.Count() != ingredientEntities.Count())
-            {
-                return NotFound();
-            }
+        //    if (ingredientIds.Count() != ingredientEntities.Count())
+        //    {
+        //        return NotFound();
+        //    }
 
-            var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities);
-            return Ok(ingredientCollectionToReturn);
-        }
+        //    var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities);
+        //    return Ok(ingredientCollectionToReturn);
+        //}
 
-        // Post IngredientCollection
-        [HttpPost]
-        public async Task<IActionResult> CreateIngredientCollection(
-           int dishId,
-           [FromBody] IEnumerable<IngredientForCreationDto> ingredientCollection)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+        //// Post IngredientCollection
+        //[HttpPost]
+        //public async Task<IActionResult> CreateIngredientCollection(
+        //   int dishId,
+        //   [FromBody] IEnumerable<IngredientForCreationDto> ingredientCollection)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (ingredientCollection == null)
-            {
-                return BadRequest();
-            }
+        //    if (ingredientCollection == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            // Map IngredientCollection (Dto) to Entity
-            IEnumerable<Ingredient> newIngredientEntities = Mapper.Map<IEnumerable<Ingredient>>(ingredientCollection);
+        //    // Map IngredientCollection (Dto) to Entity
+        //    IEnumerable<Ingredient> newIngredientEntities = Mapper.Map<IEnumerable<Ingredient>>(ingredientCollection);
 
-            // Add ingredients to dish. If ingredientname already exists, quantities will be summed up.
-            try
-            {
-                await _ingredientRepository.AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(newIngredientEntities, dishId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Adding a collection of ingredients failed.", ex);
-            }
+        //    // Add ingredients to dish. If ingredientname already exists, quantities will be summed up.
+        //    try
+        //    {
+        //        await _ingredientRepository.AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(newIngredientEntities, dishId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Adding a collection of ingredients failed.", ex);
+        //    }
 
-            // return 201 created
-            var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(newIngredientEntities);
+        //    // return 201 created
+        //    var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(newIngredientEntities);
 
-            var ingredientIdsAsString = string.Join(",", ingredientCollectionToReturn.Select(a => a.IngredientId));
+        //    var ingredientIdsAsString = string.Join(",", ingredientCollectionToReturn.Select(a => a.IngredientId));
 
-            return CreatedAtRoute("GetIngredientCollection",
-                new { dishId, ingredientIds = ingredientIdsAsString },
-                ingredientCollectionToReturn);
-        }
+        //    return CreatedAtRoute("GetIngredientCollection",
+        //        new { dishId, ingredientIds = ingredientIdsAsString },
+        //        ingredientCollectionToReturn);
+        //}
     }
 }

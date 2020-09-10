@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
+using System;
+using System.Threading.Tasks;
 
 namespace MyDishesApp.Repository.Services
 {
@@ -29,17 +27,17 @@ namespace MyDishesApp.Repository.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Dish>> GetDishesAsync()
-        {
-            return await _context.Dishes.Include(i => i.Ingredients)
-                .OrderBy(d => d.Name).ToListAsync();
-        }
+        //public async Task<IEnumerable<Dish>> GetDishesAsync()
+        //{
+        //    return await _context.Dishes.Include(i => i.Ingredients)
+        //        .OrderBy(d => d.Name).ToListAsync();
+        //}
 
-        public async Task<Dish> GetDishAsync(int dishId)
-        {
-            return await _context.Dishes.Include(i => i.Ingredients)
-                .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
-        }
+        //public async Task<Dish> GetDishAsync(int dishId)
+        //{
+        //    return await _context.Dishes.Include(i => i.Ingredients)
+        //        .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
+        //}
 
         public async Task AddDishAsync(Dish dish)
         {

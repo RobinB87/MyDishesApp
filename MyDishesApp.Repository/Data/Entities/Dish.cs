@@ -19,9 +19,8 @@ namespace MyDishesApp.Repository.Data.Entities
         public string Country { get; set; }
 
         [Required]
-        public virtual ICollection<Ingredient> Ingredients { get; set; }
-
-        [Required]
         public string Recipe { get; set; }
+
+        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

@@ -48,35 +48,35 @@ namespace MyDishesApp.WebApi.Controllers
             _userInfoService = userInfoService ?? throw new ArgumentNullException(nameof(userInfoService));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDishes()
-        {
-            if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-            {
-                return Forbid();
-            }
+        //[HttpGet]
+        //public async Task<IActionResult> GetDishes()
+        //{
+        //    if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
+        //    {
+        //        return Forbid();
+        //    }
 
-            // TODO: Add GetDishesForManager
+        //    // TODO: Add GetDishesForManager
 
-            var dishEntities = await _dishRepository.GetDishesAsync();
-            var dishes = Mapper.Map<IEnumerable<DishDto>>(dishEntities);
-            return Ok(dishes);
-        }
+        //    var dishEntities = await _dishRepository.GetDishesAsync();
+        //    var dishes = Mapper.Map<IEnumerable<DishDto>>(dishEntities);
+        //    return Ok(dishes);
+        //}
 
-        [HttpGet("{dishId}", Name = "GetDish")]
-        [Authorize(Policy = "UserMustBeDishManager")]
-        [Authorize(Policy = "UserMustBeAdministrator")]
-        public async Task<IActionResult> GetDish(int dishId)
-        {
-            var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
+        //[HttpGet("{dishId}", Name = "GetDish")]
+        //[Authorize(Policy = "UserMustBeDishManager")]
+        //[Authorize(Policy = "UserMustBeAdministrator")]
+        //public async Task<IActionResult> GetDish(int dishId)
+        //{
+        //    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
 
-            if (dishFromRepo == null)
-            {
-                return BadRequest();
-            }
+        //    if (dishFromRepo == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return Ok(Mapper.Map<DishDto>(dishFromRepo));
-        }
+        //    return Ok(Mapper.Map<DishDto>(dishFromRepo));
+        //}
 
         [HttpPost]
         public async Task<IActionResult> AddDish([FromBody] DishDto dish)
@@ -140,69 +140,69 @@ namespace MyDishesApp.WebApi.Controllers
                 dishToReturn);
         }
 
-        [HttpPatch("{dishId}")]
-        public async Task<IActionResult> PartiallyUpdateDish(int dishId,
-            [FromBody] JsonPatchDocument<DishForUpdateDto> jsonPatchDocument)
-        {
-            if (jsonPatchDocument == null)
-            {
-                return BadRequest();
-            }
+        //[HttpPatch("{dishId}")]
+        //public async Task<IActionResult> PartiallyUpdateDish(int dishId,
+        //    [FromBody] JsonPatchDocument<DishForUpdateDto> jsonPatchDocument)
+        //{
+        //    if (jsonPatchDocument == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
-            if (dishFromRepo == null)
-            {
-                return BadRequest();
-            }
+        //    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
+        //    if (dishFromRepo == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var dishToPatch = Mapper.Map<DishForUpdateDto>(dishFromRepo);
+        //    var dishToPatch = Mapper.Map<DishForUpdateDto>(dishFromRepo);
 
-            // if patchDocument is malformed, this is still a client error. Use ModelState
-            jsonPatchDocument.ApplyTo(dishToPatch, ModelState);
-            if (!ModelState.IsValid)
-            {
-                return new UnprocessableEntityObjectResult(ModelState);
-            }
+        //    // if patchDocument is malformed, this is still a client error. Use ModelState
+        //    jsonPatchDocument.ApplyTo(dishToPatch, ModelState);
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return new UnprocessableEntityObjectResult(ModelState);
+        //    }
 
-            if (!TryValidateModel(dishToPatch))
-            {
-                return new UnprocessableEntityObjectResult(ModelState);
-            }
+        //    if (!TryValidateModel(dishToPatch))
+        //    {
+        //        return new UnprocessableEntityObjectResult(ModelState);
+        //    }
 
-            Mapper.Map(dishToPatch, dishFromRepo);
+        //    Mapper.Map(dishToPatch, dishFromRepo);
 
-            if (!await _dishRepository.SaveAsync())
-            {
-                throw new Exception("Updating a dish failed on save.");
-            }
+        //    if (!await _dishRepository.SaveAsync())
+        //    {
+        //        throw new Exception("Updating a dish failed on save.");
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
         
-        // Delete dish
-        [HttpDelete("{dishId}")]
-        public async Task<IActionResult> DeleteDish(int dishId)
-        {
-            // Check if dish exists.
-            if (!await _dishRepository.DishExists(dishId))
-            {
-                return NotFound();
-            }
+        //// Delete dish
+        //[HttpDelete("{dishId}")]
+        //public async Task<IActionResult> DeleteDish(int dishId)
+        //{
+        //    // Check if dish exists.
+        //    if (!await _dishRepository.DishExists(dishId))
+        //    {
+        //        return NotFound();
+        //    }
 
-            // If dish (entity) exists, get it and then remove it.
-            var dishEntity = await _dishRepository.GetDishAsync(dishId);
-            _dishRepository.DeleteDish(dishEntity);
+        //    // If dish (entity) exists, get it and then remove it.
+        //    var dishEntity = await _dishRepository.GetDishAsync(dishId);
+        //    _dishRepository.DeleteDish(dishEntity);
 
-            // Try to save database
-            if (!await _dishRepository.SaveAsync())
-            {
-                throw new Exception("Deleting a dish failed on save.");
-            }
+        //    // Try to save database
+        //    if (!await _dishRepository.SaveAsync())
+        //    {
+        //        throw new Exception("Deleting a dish failed on save.");
+        //    }
 
-            // TODO: add mailservice which sends an e-mail that the dish is deleted.
+        //    // TODO: add mailservice which sends an e-mail that the dish is deleted.
 
-            // The response has no body, so therefore a 202 No Content.
-            return NoContent();
-        }
+        //    // The response has no body, so therefore a 202 No Content.
+        //    return NoContent();
+        //}
     }
 }

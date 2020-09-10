@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDishesApp.Repository.Data.Entities
@@ -18,9 +19,10 @@ namespace MyDishesApp.Repository.Data.Entities
         [Required]
         public double Quantity { get; set; }
 
+        //[ForeignKey("DishId")]
+        //public Dish Dish { get; set; }
+        //public int DishId { get; set; }
 
-        [ForeignKey("DishId")]
-        public Dish Dish { get; set; }
-        public int DishId { get; set; }
+        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }
