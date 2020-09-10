@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.IDP", "Marvin.IDP\Marvin.IDP.csproj", "{5648EEDE-7130-4412-A468-6F8A648ABCB2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.Repository", "MyDishesApp.Repository\MyDishesApp.Repository.csproj", "{C4918A0E-6AB7-4432-9545-B14E0843DFD4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.WebApi", "MyDishesApp.WebApi\MyDishesApp.WebApi.csproj", "{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5648EEDE-7130-4412-A468-6F8A648ABCB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4918A0E-6AB7-4432-9545-B14E0843DFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
