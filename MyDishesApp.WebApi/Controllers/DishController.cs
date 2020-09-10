@@ -9,6 +9,7 @@ using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,23 +51,14 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDishes()
         {
-            var dishEntities = new List<Dish>();
-
-            if (_userInfoService.Role == "Administrator")
+            if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
             {
-                dishEntities = await _dishRepository.GetDishesAsync().ToList();
-            }
-            else
-            {
-                if (!Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-                {
-                    return Forbid();
-                }
-
-                // TODO: Add GetDishesForManager...
-                dishEntities = await _dishRepository.GetDishesAsync().ToList();
+                return Forbid();
             }
 
+            // TODO: Add GetDishesForManager
+
+            var dishEntities = await _dishRepository.GetDishesAsync();
             var dishes = Mapper.Map<IEnumerable<DishDto>>(dishEntities);
             return Ok(dishes);
         }

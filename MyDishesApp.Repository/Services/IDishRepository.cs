@@ -10,6 +10,10 @@ namespace MyDishesApp.Repository.Services
     public interface IDishRepository
     {
         Task<bool> DishExists(int dishId);
+
+        /// <summary>
+        /// Get all dishes
+        /// </summary>
         Task<IEnumerable<Dish>> GetDishesAsync();
         Task<Dish> GetDishAsync(int dishId);
         Task AddDishAsync(Dish dish);

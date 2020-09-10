@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MyDishesApp.WebApi.Database;
+using MyDishesApp.Repository.Data;
 
 namespace MyDishesApp.WebApi
 {
@@ -13,13 +13,12 @@ namespace MyDishesApp.WebApi
         {
             var host = BuildWebHost(args);
 
-            // migrate & seed the database.
-            // est practice = in Main, using service scope
+            // Migrate and seed the database.
             using (var scope = host.Services.CreateScope())
             {
                 try
                 {
-                    var context = scope.ServiceProvider.GetService<DishInfoContext>();
+                    var context = scope.ServiceProvider.GetService<DishesContext>();
                     context.Database.Migrate();
                     context.EnsureSeedDataForContext();
                 }

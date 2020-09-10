@@ -28,6 +28,7 @@ namespace MyDishesApp.Repository.Services
             return await _context.Dishes.AnyAsync(d => d.DishId == dishId);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Dish>> GetDishesAsync()
         {
             return await _context.Dishes.Include(i => i.Ingredients)

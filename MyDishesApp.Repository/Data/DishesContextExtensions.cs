@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using MyDishesApp.Repository.Data.Entities;
+﻿using MyDishesApp.Repository.Data.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyDishesApp.Repository.Data
 {
@@ -8,7 +9,7 @@ namespace MyDishesApp.Repository.Data
         public static void EnsureSeedDataForContext(this DishesContext context)
         {
             // Check if this data is already in db
-            if (context.Any<Dish>(context.Dishes))
+            if (context.Dishes.Any())
             {
                 return;
             }

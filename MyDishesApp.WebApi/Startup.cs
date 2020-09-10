@@ -11,6 +11,11 @@ using MyDishesApp.WebApi.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
+using Microsoft.Extensions.Hosting;
+using MyDishesApp.Repository.Data;
+using MyDishesApp.Repository.Data.Entities;
+using MyDishesApp.Repository.Services;
+using MyDishesApp.WebApi.Dtos;
 
 namespace MyDishesApp.WebApi
 {
@@ -52,11 +57,11 @@ namespace MyDishesApp.WebApi
 
                 // input formatters
                 var jsonInputFormatter = setupAction.InputFormatters
-                   .OfType<JsonInputFormatter>().FirstOrDefault();
+                   .OfType<SystemTextJsonInputFormatter>().FirstOrDefault();
 
                 jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.robin.createdish+json");
             })
-            .AddJsonOptions(options =>
+            .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.DateParseHandling = DateParseHandling.DateTimeOffset;
                 options.SerializerSettings.ContractResolver =
@@ -73,10 +78,10 @@ namespace MyDishesApp.WebApi
 
             // Register the DbContext on the container, getting the connection string from appsettings
             var connectionString = Configuration["ConnectionStrings:MyDishesAppDB"];
-            services.AddDbContext<DishInfoContext>(o => o.UseSqlServer(connectionString));
+            services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
 
             // register the repository
-            services.AddScoped<IDishRepository, DishInfoRepository>();
+            services.AddScoped<IDishRepository, DishRepository>();
 
             // register an IHttpContextAccessor so we can access the current
             // HttpContext in services by injecting it
@@ -94,7 +99,7 @@ namespace MyDishesApp.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DishInfoContext dishInfoContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -112,20 +117,24 @@ namespace MyDishesApp.WebApi
                 });
             }
 
+            // TODO: Create mapping profile class
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Database.Entities.Dish, Dtos.DishDto>();
-                config.CreateMap<Database.Entities.Dish, Dtos.DishForUpdateDto>().ReverseMap();
-                config.CreateMap<Dtos.IngredientForCreationDto, Database.Entities.Ingredient>();
-                config.CreateMap<Database.Entities.Ingredient, Dtos.IngredientForUpdateDto>().ReverseMap();
+                config.CreateMap<Dish, DishDto>();
+                config.CreateMap<Dish, DishForUpdateDto>().ReverseMap();
+                config.CreateMap<IngredientForCreationDto, Ingredient>();
+                config.CreateMap<Ingredient, IngredientForUpdateDto>().ReverseMap();
             });
 
             // Enable CORS
             app.UseCors("AllowAllOriginsHeadersAndMethods");
-
             app.UseAuthentication();
-
-            app.UseMvc();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
