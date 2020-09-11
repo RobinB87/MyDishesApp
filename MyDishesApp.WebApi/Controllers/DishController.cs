@@ -5,6 +5,7 @@ using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyDishesApp.WebApi.Controllers
@@ -47,10 +48,10 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <returns>A list of dishes</returns>
         [HttpGet]
-        public async Task<ActionResult> GetDishes()
+        public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
         {
-            var dishes = _mapper.Map<IEnumerable<DishDto>>(await _dishRepository.GetDishesAsync());
-            return Ok(dishes);
+            var dishEntities = await _dishRepository.GetDishesAsync();
+            return _mapper.Map<IEnumerable<DishDto>>(dishEntities).ToList();
         }
 
         //[HttpGet]

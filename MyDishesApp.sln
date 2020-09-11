@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.Repository", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.WebApi", "MyDishesApp.WebApi\MyDishesApp.WebApi.csproj", "{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FCCD932D-187B-4766-B8D3-DC780FF0711E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Tests.Unit", "Tests\WebApi.Tests.Unit\WebApi.Tests.Unit.csproj", "{6001D934-75E0-45CD-9192-4093F6B0F368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC1E2871-1118-4CAB-86F3-A1EBC52D835D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6001D934-75E0-45CD-9192-4093F6B0F368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6001D934-75E0-45CD-9192-4093F6B0F368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6001D934-75E0-45CD-9192-4093F6B0F368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6001D934-75E0-45CD-9192-4093F6B0F368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6001D934-75E0-45CD-9192-4093F6B0F368} = {FCCD932D-187B-4766-B8D3-DC780FF0711E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C44BFF6B-E954-4D5C-84FC-2D13F5CD10BD}
