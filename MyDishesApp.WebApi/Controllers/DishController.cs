@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;

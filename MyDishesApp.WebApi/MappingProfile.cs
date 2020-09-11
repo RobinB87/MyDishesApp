@@ -17,9 +17,10 @@ namespace MyDishesApp.WebApi
         {
             //Source, Destination
             CreateMap<Dish, DishDto>()
-                .ForMember(d => d.Ingredients, opt => opt.MapFrom(s => s.DishIngredients.Select(y => y.Ingredient).ToList()));
+                .ForMember(d => d.Ingredients,  opt => opt.MapFrom(s => s.DishIngredients.Select(y => y.Ingredient).ToList()));
 
-            CreateMap<Ingredient, IngredientDto>();
+            CreateMap<Ingredient, IngredientDto>()
+                .ForMember(d => d.Quantity, opt => opt.MapFrom(s => s.DishIngredients.Select(i => i.Quantity).FirstOrDefault()));
         }
 
         //    config.CreateMap<Dish, DishDto>();

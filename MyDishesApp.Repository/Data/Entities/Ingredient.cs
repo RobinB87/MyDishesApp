@@ -16,9 +16,6 @@ namespace MyDishesApp.Repository.Data.Entities
         [Required]
         public double PricePerUnit { get; set; }
 
-        [Required]
-        public double Quantity { get; set; }
-
         public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

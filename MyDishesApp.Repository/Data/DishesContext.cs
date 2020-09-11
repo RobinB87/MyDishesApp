@@ -23,6 +23,10 @@ namespace MyDishesApp.Repository.Data
                 .HasIndex(d => d.Name)
                 .IsUnique();
 
+            modelBuilder.Entity<Ingredient>()
+                .HasIndex(d => d.Name)
+                .IsUnique();
+
             modelBuilder.Entity<DishIngredient>()
                 .HasKey(di => new { di.DishId, di.IngredientId });
             modelBuilder.Entity<DishIngredient>()

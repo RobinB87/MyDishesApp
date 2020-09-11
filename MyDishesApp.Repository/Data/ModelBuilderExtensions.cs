@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data.Entities;
-using System.Linq;
 
 namespace MyDishesApp.Repository.Data
 {
-    public static class DishesContextExtensions
+    public static class ModelBuilderExtensions
     {
-        public static void EnsureSeedDataForContext(this DishesContext context)
+        public static void SeedDatabase(this ModelBuilder modelBuilder)
         {
-            // Check if this data is already in db
-            if (context.Dishes.Any())
-            {
-                return;
-            }
-
-            // Initial seed data
-            var dishes = new List<Dish>
+            var dishes = new Dish[]
             {
                 new Dish
                 {
@@ -42,7 +33,7 @@ namespace MyDishesApp.Repository.Data
                 }
             };
 
-            var ingredients = new List<Ingredient>
+            var ingredients = new Ingredient[]
             {
                 new Ingredient
                 {
@@ -136,7 +127,7 @@ namespace MyDishesApp.Repository.Data
                 }
             };
 
-            var dishIngredients = new List<DishIngredient>
+            var dishIngredients = new DishIngredient[]
             {
                 new DishIngredient
                 {
@@ -177,18 +168,6 @@ namespace MyDishesApp.Repository.Data
                 new DishIngredient
                 {
                     DishId = 2,
-                    IngredientId = 4,
-                    Quantity = 6
-                },
-                new DishIngredient
-                {
-                    DishId = 2,
-                    IngredientId = 5,
-                    Quantity = 1
-                },
-                new DishIngredient
-                {
-                    DishId = 2,
                     IngredientId = 7,
                     Quantity = 1
                 },
@@ -208,18 +187,6 @@ namespace MyDishesApp.Repository.Data
                 {
                     DishId = 2,
                     IngredientId = 10,
-                    Quantity = 1
-                },
-                new DishIngredient
-                {
-                    DishId = 3,
-                    IngredientId = 4,
-                    Quantity = 4
-                },
-                new DishIngredient
-                {
-                    DishId = 3,
-                    IngredientId = 5,
                     Quantity = 1
                 },
                 new DishIngredient
@@ -254,76 +221,9 @@ namespace MyDishesApp.Repository.Data
                 }
             };
 
-            // Add dishes and ingredients to dishingredients
-            foreach (var dishIngredient in dishIngredients)
-            {
-                dishIngredient.Dish = dishes.FirstOrDefault(d => d.DishId == dishIngredient.DishId);
-                dishIngredient.Ingredient = ingredients.FirstOrDefault(i => i.IngredientId == dishIngredient.IngredientId);
-            }
-
-            // Add the dishes to the database
-            // Store the added dish separately to use its saved id
-            var addedDishes = new List<Dish>();
-            foreach (var dish in dishes)
-            {
-                var dishToAdd = CreateDishForDbAdd(dish);
-                context.Dishes.Add(dishToAdd);
-                context.SaveChanges();
-
-                addedDishes.Add(dishToAdd);
-            }
-
-            // Add the ingredients to the database
-            // Store the added ingredient separately to use its saved id
-            var addedIngredients = new List<Ingredient>();
-            foreach (var ingredient in ingredients)
-            {
-                var ingredientToAdd = CreateIngredientForDbAdd(ingredient);
-                context.Ingredients.Add(ingredientToAdd);
-                context.SaveChanges();
-
-                addedIngredients.Add(ingredientToAdd);
-            }
-
-            // Add the dish ingredients (link table) to the database
-            foreach (var dishIngredient in dishIngredients)
-            {
-                var dishId = addedDishes.Where(d => d.Name == dishIngredient.Dish.Name).Select(d => d.DishId).FirstOrDefault();
-                var ingredientId = addedIngredients.Where(i => i.Name == dishIngredient.Ingredient.Name).Select(i => i.IngredientId).FirstOrDefault();
-
-                context.DishIngredients.Add(CreateDishIngredientForDbAdd(dishIngredient, dishId, ingredientId));
-            }
-
-            context.SaveChanges();
-        }
-
-        private static Ingredient CreateIngredientForDbAdd(Ingredient ingredient)
-        {
-            return new Ingredient
-            {
-                Name = ingredient.Name,
-                PricePerUnit = ingredient.PricePerUnit
-            };
-        }
-
-        private static Dish CreateDishForDbAdd(Dish dish)
-        {
-            return new Dish
-            {
-                Name = dish.Name,
-                Country = dish.Country,
-                Recipe = dish.Recipe
-            };
-        }
-
-        private static DishIngredient CreateDishIngredientForDbAdd(DishIngredient dishIngredient, int dishId, int ingredientId)
-        {
-            return new DishIngredient
-            {
-                Quantity = dishIngredient.Quantity,
-                DishId = dishId,
-                IngredientId = ingredientId
-            };
+            modelBuilder.Entity<Dish>().HasData(dishes[0], dishes[1], dishes[2]);
+            modelBuilder.Entity<Ingredient>().HasData(ingredients[0], ingredients[1], ingredients[2], ingredients[3], ingredients[4], ingredients[5], ingredients[6], ingredients[7], ingredients[8], ingredients[9], ingredients[10], ingredients[10], ingredients[11], ingredients[12], ingredients[13]);
+            modelBuilder.Entity<DishIngredient>().HasData(dishIngredients[0], dishIngredients[1], dishIngredients[2], dishIngredients[3], dishIngredients[4], dishIngredients[5], dishIngredients[6], dishIngredients[7], dishIngredients[8], dishIngredients[9], dishIngredients[10], dishIngredients[10], dishIngredients[11], dishIngredients[12], dishIngredients[13]);
         }
     }
 }
