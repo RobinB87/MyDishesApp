@@ -8,13 +8,10 @@ import { Dish } from "./dish.model";
 @Injectable()
 export class DishService extends BaseService {
   httpClient: any;
-  // asyncResult: any;
 
   constructor(private http: HttpClient) {
     super();
   }
-
-  // ENTERNE LINKS NAAR API
 
   // Get
   getDishes(): Observable<Dish[]> {
