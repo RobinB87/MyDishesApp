@@ -1,0 +1,45 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    My dishes
+  </div>
+  <a class="btn btn-primary" style="width:100px; margin-left:10px; margin-top:10px;" [routerLink]="['/dish-add']">
+    Add a dish
+  </a>
+  <br /><br />
+
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table" *ngIf="dishes && dishes.length">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Ingredients</th>
+            <th>Dish price</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!--TODO: remove ingredients from table and show them when you click the dish. Instead add totalDishPrice item.-->
+
+          <tr *ngFor="let dish of dishes">
+            <td>
+              <a [routerLink]="['/dishes', dish.dishId]">
+                {{ dish.name }}
+              </a>
+            </td>
+            <td>{{ dish.country }}</td>
+            <td>{{ calculateSumOfNumberOfIngredients(dish) }}</td>
+            <td>{{ calculateSumOfIngredientPrices(dish) | currency: 'EUR' }}</td>
+
+            <td>
+              <a class="btn btn-primary" [routerLink]="['/dish-update', dish.dishId]">
+                Edit
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

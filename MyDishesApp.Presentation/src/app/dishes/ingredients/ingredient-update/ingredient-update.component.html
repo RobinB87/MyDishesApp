@@ -1,0 +1,79 @@
+<div class="panel-header">
+  <a class="btn btn-default" [routerLink]="['/dishes', this.dishId]">
+    Back
+  </a>
+</div><br />
+
+<div class="panel panel-primary">
+  <div class="panel-heading h4" *ngIf='ingredient'>
+    Edit {{ ingredient.name }}
+  </div><br />
+  <div class="panel-body" *ngIf='ingredient'>
+
+
+    <form class="form-horizontal" novalidate (ngSubmit)="saveIngredient()" [formGroup]="ingredientForm">
+      <fieldset>
+
+
+        <div class="form-group"
+             [ngClass]="{'has-error': ingredientForm.controls.name.invalid
+          && ingredientForm.controls.name.dirty}">
+          <label class="col-md-2 control-label" for="nameId">Name</label>
+          <div class="col-md-8">
+            <input class="form-control" id="nameId" type="text" placeholder="{{ingredient.name}}" formControlName="name" />
+            <div *ngIf="ingredientForm.controls.name.dirty" class="has-error">
+              <div *ngIf="ingredientForm.controls.name.errors?.required">Name is required.</div>
+              <div *ngIf="ingredientForm.controls.name.errors?.maxlength">Name is too long.</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group"
+             [ngClass]="{'has-error': ingredientForm.controls.pricePerUnit.invalid
+          && ingredientForm.controls.pricePerUnit.dirty}">
+          <label class="col-md-2 control-label" for="pricePerUnitId">Unit price</label>
+          <div class="col-md-8">
+            <input class="form-control" onkeydown="javascript: return event.keyCode !== 69" id="pricePerUnitId" placeholder="{{ingredient.pricePerUnit}}" formControlName="pricePerUnit" />
+            <div *ngIf="ingredientForm.controls.pricePerUnit.dirty" class="has-error">
+              <div *ngIf="ingredientForm.controls.pricePerUnit.errors?.required">Unit price is required.</div>
+              <div *ngIf="ingredientForm.controls.pricePerUnit.errors?.max">Unit price can be a maximum of €100.</div>
+              <div *ngIf="ingredientForm.controls.pricePerUnit.errors?.pattern">Input should be a number. Decimals are allowed by using a dot (.).</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group"
+             [ngClass]="{'has-error': ingredientForm.controls.quantity.invalid
+          && ingredientForm.controls.quantity.dirty}">
+          <label class="col-md-2 control-label" for="quantity">Quantity</label>
+          <div class="col-md-8">
+            <input class="form-control" onkeydown="javascript: return event.keyCode !== 69" id="quantityId" placeholder="{{ingredient.quantity}}" formControlName="quantity" />
+            <div *ngIf="ingredientForm.controls.quantity.dirty" class="has-error">
+              <div *ngIf="ingredientForm.controls.quantity.errors?.required">Unit price is required.</div>
+              <div *ngIf="ingredientForm.controls.quantity.errors?.max">Quantity can be a maximum of units.</div>
+              <div *ngIf="ingredientForm.controls.quantity.errors?.pattern">Input should be a number. Decimals are allowed by using a dot (.).</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
+            <span>
+              <button class="btn btn-success" type="submit"
+                      [disabled]="!ingredientForm.valid">
+                Save
+              </button>
+            </span>
+          </div>
+        </div>
+
+
+      </fieldset>
+    </form>
+
+
+  </div>
+</div>

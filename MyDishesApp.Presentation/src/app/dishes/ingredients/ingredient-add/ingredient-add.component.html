@@ -1,0 +1,38 @@
+<div class="panel-header">
+  <a class="btn btn-default" [routerLink]="['/dishes', this.dishId]">
+    Back
+  </a>
+</div><br />
+
+<div class="panel panel-primary">
+  <div class="panel-heading h4">
+    Add ingredient(s)
+  </div>
+  <div class="panel-body">
+    <form class="form-horizontal" novalidate (ngSubmit)="addIngredients()"
+          [formGroup]="ingredientCollectionForm">
+      <fieldset>
+        <div formArrayName="ingredients"
+             *ngFor="let ingredient of ingredientCollectionForm.get('ingredients').controls; let i = index;">
+          <app-ingredient-single [ingredientIndex]="i"
+                                 [ingredient]="ingredient" (removeIngredientClicked)="ingredientCollectionForm.get('ingredients').removeAt($event)"></app-ingredient-single>
+        </div>
+        <div class="row">
+          <a class="btn btn-primary" (click)="addIngredient()"
+             style="width:150px; margin-left:30px; margin-bottom:15px;">Add ingredient</a>
+        </div>
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
+            <span>
+              <button class="btn btn-success" type="submit"
+                      [disabled]="!ingredientCollectionForm.valid">
+                Save
+              </button>
+            </span>
+
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

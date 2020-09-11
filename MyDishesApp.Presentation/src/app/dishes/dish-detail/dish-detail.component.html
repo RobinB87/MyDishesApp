@@ -1,0 +1,67 @@
+<div class="panel-header">
+  <a class="btn btn-default" [routerLink]="['/dishes']">
+    Back
+  </a>
+</div><br />
+
+      <div class="panel panel-primary" *ngIf='dish'>
+        <div class="panel-heading">
+
+          <h4>
+            {{ dish.name }}
+          </h4><br />
+
+          <div class="row">
+            <div class="col-md-2">Country:</div>
+            <div class="col-md-10">{{dish.country}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">Ingredients:</div>
+            <div class="col-md-10">{{calculateSumOfNumberOfIngredients()}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">Dish price:</div>
+            <div class="col-md-10">{{calculateSumOfIngredientPrices() | currency:'EUR' }}</div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <button class="btn btn-danger"
+                    style="width:150px; margin-left:15px"
+                    (click)="openModal()">
+              Delete dish
+            </button>
+          </div>
+          <br />
+          <br />
+
+        </div>
+
+
+        <div class="panel-body">
+
+          <h5>
+            Ingredients
+          </h5>
+
+          <div class="row" style="margin-top:10px;">
+
+            <button class="btn btn-primary"
+                    [routerLink]="['ingredient-add']"
+                    style="width:150px; margin-left:15px">
+              Add ingredient(s)
+            </button>
+
+
+          </div><br />
+          <app-ingredients *ngIf='dish && dish.ingredients && dish.ingredients.length'
+                           [ingredients]="dish.ingredients"></app-ingredients>
+        </div>
+
+        <h5>
+          Recipe:
+        </h5>
+
+              <div>
+                {{dish.recipe}}
+              </div>
+        </div>

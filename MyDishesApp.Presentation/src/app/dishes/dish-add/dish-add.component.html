@@ -1,0 +1,93 @@
+<div class="panel-header">
+  <a class="btn btn-default" [routerLink]="['/dishes']">
+    Back
+  </a>
+</div><br />
+
+<div class="panel panel-primary">
+
+  <div class="panel-heading h4">
+    Add a dish
+  </div><br />
+
+  <div class="panel-body">
+
+    <form class="form-horizontal" novalidate (ngSubmit)="addDish()" [formGroup]="dishForm">
+      <fieldset>
+
+        <div class="form-group"
+             [ngClass]="{'has-error': dishForm.controls.name.invalid
+        && dishForm.errors?.dishNameEqualsCountry}">
+          <label class="col-md-2 control-label" for="nameId">Name</label>
+          <div class="col-md-8">
+            <input class="form-control" id="nameId" type="text" placeholder="Name" formControlName="name" />
+            <div *ngIf="dishForm.controls.name.errors?.required">Name is required.</div>
+            <div *ngIf="dishForm.controls.name.errors?.maxlength">Name is too long.</div>
+            <div *ngIf="dishForm.controls.name.errors?.pattern">Name can only contain (capital) letters (a-z) and colon (:).</div>
+            <div *ngIf="dishForm.dirty" class="has-error">
+              <div *ngIf="dishForm.errors?.dishNameEqualsCountry">Name and country should not be equal.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" [ngClass]="{'has-error': dishForm.errors?.dishNameEqualsCountry
+             && (dishForm.controls.country.dirty || dishForm.controls.country.dirty)}">
+          <label class="col-md-2 control-label" for="countryId">Country</label>
+          <div class="col-md-8">
+            <input class="form-control" id="countryId" placeholder="Country" formControlName="country" />
+            <div *ngIf="dishForm.dirty" class="has-error">
+              <div *ngIf="dishForm.errors?.dishNameEqualsCountry">Name and country should not be equal.</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row col-md-2 h4" style="margin-top: 10px;">
+          Ingredients
+        </div>
+
+        <div formArrayName="ingredients"
+             *ngFor="let ingredient of dishForm.get('ingredients').controls; let i = index;">
+
+          <app-ingredient-single [ingredientIndex]="i"
+                                 [ingredient]="ingredient"
+                                 (removeIngredientClicked)="dishForm.get('ingredients').removeAt($event)"></app-ingredient-single>
+        </div>
+
+
+        <div class="row">
+          <a class="btn btn-primary" (click)="addIngredient()"
+             style="width:150px; margin-left:30px; margin-bottom:15px;">Add Ingredient</a>
+        </div>
+
+        <!--Ensure that the user IMMEDIATELY knows that the recipe is required. Even without TOUCHING it.
+  Therefore, don't check if the recipe control is dirty.-->
+        <div class="form-group"
+             [ngClass]="{'has-error': dishForm.controls.recipe.invalid}">
+          <label class="col-md-2 control-label" for="recipeId">Recipe</label>
+          <div class="col-md-8">
+            <textarea class="form-control" id="recipeId" type="text" placeholder="Recipe"
+                      rows=5 formControlName="recipe"></textarea>
+            <div *ngIf="dishForm.controls.recipe.errors?.required">Recipe is required.</div>
+            <div *ngIf="dishForm.controls.recipe.errors?.minlength">Recipe is too short.</div>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
+            <span>
+              <button class="btn btn-success" type="submit"
+                      [disabled]="!dishForm.valid">
+                Save
+              </button>
+            </span>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+
+
+  </div>
+</div>

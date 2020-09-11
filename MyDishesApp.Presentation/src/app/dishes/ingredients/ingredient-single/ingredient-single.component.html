@@ -1,0 +1,55 @@
+<div [formGroup]="ingredient">
+
+
+  <div class="form-group"
+       [ngClass]="{'has-error': ingredient.controls.name.invalid}">
+    <label class="col-md-2 control-label"
+           [attr.for]="'nameId'+ingredientIndex">Name</label>
+    <div class="col-md-8">
+      <input class="form-control" [attr.id]="'nameId'+ingredientIndex"
+             type="text" formControlName="name" />
+      <div *ngIf="ingredient.controls.name.errors?.required">Name is required.</div>
+      <div *ngIf="ingredient.controls.name.errors?.maxlength">Name is too long.</div>
+      <div *ngIf="ingredient.controls.name.errors?.pattern">Name can only contain (capital) letters (a-z) and colon (:).</div>
+    </div>
+  </div>
+
+
+  <div class="form-group"
+       [ngClass]="{'has-error': ingredient.controls.pricePerUnit.invalid}">
+    <label class="col-md-2 control-label" [attr.for]="'pricePerUnitId'+ingredientIndex">Unit price</label>
+    <div class="col-md-8">
+      <input class="form-control" [attr.id]="'pricePerUnitId'+ingredientIndex"
+      type="number" onkeydown="javascript: return event.keyCode !== 69" formControlName="pricePerUnit" />
+      <div *ngIf="ingredient.controls.pricePerUnit.errors?.required">Unit price is required.</div>
+      <div *ngIf="ingredient.controls.pricePerUnit.errors?.max">Unit price can be a maximum of €100.</div>
+      <div *ngIf="ingredient.controls.pricePerUnit.errors?.pattern">Input should be a number. Decimals are allowed by using a dot (.).</div>
+    </div>
+  </div>
+
+
+  <div class="form-group"
+       [ngClass]="{'has-error': ingredient.controls.quantity.invalid}">
+    <label class="col-md-2 control-label"
+           [attr.for]="'quantityId'+ingredientIndex">Quantity</label>
+    <div class="col-md-8">
+      <input class="form-control" [attr.id]="'quantityId'+ingredientIndex"
+      type="number" onkeydown="javascript: return event.keyCode !== 69" formControlName="quantity" />
+      <div *ngIf="ingredient.controls.quantity.errors?.required">Quantity is required.</div>
+      <div *ngIf="ingredient.controls.quantity.errors?.max">Quantity can be a maximum of €100.</div>
+      <div *ngIf="ingredient.controls.quantity.errors?.pattern">Input should be a number. Decimals are allowed by using a dot (.).</div>
+    </div>
+  </div>
+
+
+  <!-- Remove Show Button-->
+  <div class="form-group">
+    <div class="col-md-10">
+      <button class="btn btn-danger pull-right" (click)="removeIngredientClicked.emit(ingredientIndex)">
+        Remove ingredient
+      </button>
+    </div>
+  </div>
+
+
+</div>

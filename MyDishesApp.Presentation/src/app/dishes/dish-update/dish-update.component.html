@@ -1,0 +1,83 @@
+<div class="panel-header">
+  <a class="btn btn-default" [routerLink]="['/dishes']">
+    Back
+  </a>
+</div><br />
+
+<div class="panel panel-primary">
+  <div class="panel-heading h4" *ngIf='dish'>
+    Edit {{ dish.name }}
+  </div><br />
+  <div class="panel-body" *ngIf='dish'>
+
+    <form class="form-horizontal" novalidate (ngSubmit)="saveDish()" [formGroup]="dishForm">
+      <fieldset>
+
+
+        <!--Add validation (has error class is from bootstrap-->
+        <div class="form-group"
+             [ngClass]="{'has-error': dishForm.controls.name.invalid
+        && dishForm.controls.name.dirty
+        && dishForm.errors?.dishNameEqualsCountry}">
+          <label class="col-md-2 control-label" for="nameId">Name</label>
+          <div class="col-md-8">
+            <input class="form-control" id="nameId" type="text" placeholder="{{dish.name}}" formControlName="name" />
+            <div *ngIf="dishForm.controls.name.dirty" class="has-error">
+              <div *ngIf="dishForm.controls.name.errors?.required">Name is required.</div>
+              <div *ngIf="dishForm.controls.name.errors?.maxlength">Name is too long.</div>
+              <div *ngIf="dishForm.controls.name.errors?.pattern">Name can only contain (capital) letters (a-z) and colon (:).</div>
+              <div *ngIf="dishForm.dirty" class="has-error">
+                <div *ngIf="dishForm.errors?.dishNameEqualsCountry">Name and country should not be equal.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--? is safe operation navigator-->
+
+
+        <div class="form-group" [ngClass]="{'has-error': dishForm.errors?.dishNameEqualsCountry
+             && (dishForm.controls.name.dirty || dishForm.controls.country.dirty)}">
+          <label class="col-md-2 control-label" for="countryId">Country</label>
+          <div class="col-md-8">
+            <input class="form-control" id="countryId" placeholder="{{dish.country}}" formControlName="country" />
+            <div *ngIf="dishForm.dirty" class="has-error">
+              <div *ngIf="dishForm.errors?.dishNameEqualsCountry">Name and country should not be equal.</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group"
+             [ngClass]="{'has-error': dishForm.controls.recipe.invalid
+             && dishForm.controls.recipe.dirty}">
+          <label class="col-md-2 control-label" for="recipeId">Recipe</label>
+          <div class="col-md-8">
+            <textarea class="form-control" id="recipeId" placeholder="{{dish.recipe}}"
+            rows=5 formControlName="recipe"></textarea>
+            <div *ngIf="dishForm.dirty" class="has-error">
+              <div *ngIf="dishForm.controls.recipe.errors?.required">Recipe is required.</div>
+              <div *ngIf="dishForm.controls.recipe.errors?.minlength">Recipe is too short.</div>
+            </div>
+          </div>
+        </div>
+
+
+        <!--Added disabling of submit button when dishForm is not valid-->
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
+            <span>
+              <button class="btn btn-success" type="submit"
+                      [disabled]="!dishForm.valid">
+                Save
+              </button>
+            </span>
+          </div>
+        </div>
+
+
+      </fieldset>
+    </form>
+
+
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div [ngStyle]="{'min-height': clientHeight + 'px', 'margin-bottom': '-200px'}">
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <a class="navbar-brand">{{ title }}</a>
+      <ul class="navbar navbar-nav">
+        <li><a [routerLink]="['/dishes']">Dishes management</a></li>
+        <li><a [routerLink]="['/about']">About</a></li>
+        <li *ngIf='openIdConnectService.userAvailable'>
+          <a (click)="openIdConnectService.triggerSignOut()">Sign out</a>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+
+  <div class='container'>
+    <router-outlet></router-outlet>
+  </div>
+
+  <div style="height: 200px"></div>
+
+  <app-footer></app-footer>
+   
+  
+</div>
+
+
+
+
+
