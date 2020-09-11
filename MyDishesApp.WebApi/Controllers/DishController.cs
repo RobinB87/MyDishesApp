@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -16,7 +17,7 @@ namespace MyDishesApp.WebApi.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class DishController : Controller
     {
         private readonly IMapper _mapper;
