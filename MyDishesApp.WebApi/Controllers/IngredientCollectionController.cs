@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyDishesApp.WebApi.Dtos;
-using MyDishesApp.WebApi.Helpers;
-using MyDishesApp.Repository.Data.Entities;
+using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -48,7 +42,7 @@ namespace MyDishesApp.WebApi.Controllers
 
         //// Get
         //[HttpGet("({ingredientIds})", Name = "GetIngredientCollection")]
-        //public async Task<IActionResult> GetIngredientCollection(int dishId,
+        //public async Task<ActionResult> GetIngredientCollection(int dishId,
         //    [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ingredientIds)
         //{
         //    if (ingredientIds == null || !ingredientIds.Any())
@@ -68,13 +62,13 @@ namespace MyDishesApp.WebApi.Controllers
         //        return NotFound();
         //    }
 
-        //    var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities);
+        //    var ingredientCollectionToReturn = _mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities);
         //    return Ok(ingredientCollectionToReturn);
         //}
 
         //// Post IngredientCollection
         //[HttpPost]
-        //public async Task<IActionResult> CreateIngredientCollection(
+        //public async Task<ActionResult> CreateIngredientCollection(
         //   int dishId,
         //   [FromBody] IEnumerable<IngredientForCreationDto> ingredientCollection)
         //{
@@ -94,7 +88,7 @@ namespace MyDishesApp.WebApi.Controllers
         //    }
 
         //    // Map IngredientCollection (Dto) to Entity
-        //    IEnumerable<Ingredient> newIngredientEntities = Mapper.Map<IEnumerable<Ingredient>>(ingredientCollection);
+        //    IEnumerable<Ingredient> newIngredientEntities = _mapper.Map<IEnumerable<Ingredient>>(ingredientCollection);
 
         //    // Add ingredients to dish. If ingredientname already exists, quantities will be summed up.
         //    try
@@ -107,7 +101,7 @@ namespace MyDishesApp.WebApi.Controllers
         //    }
 
         //    // return 201 created
-        //    var ingredientCollectionToReturn = Mapper.Map<IEnumerable<IngredientDto>>(newIngredientEntities);
+        //    var ingredientCollectionToReturn = _mapper.Map<IEnumerable<IngredientDto>>(newIngredientEntities);
 
         //    var ingredientIdsAsString = string.Join(",", ingredientCollectionToReturn.Select(a => a.IngredientId));
 

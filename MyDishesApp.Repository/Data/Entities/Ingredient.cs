@@ -19,10 +19,6 @@ namespace MyDishesApp.Repository.Data.Entities
         [Required]
         public double Quantity { get; set; }
 
-        //[ForeignKey("DishId")]
-        //public Dish Dish { get; set; }
-        //public int DishId { get; set; }
-
         public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

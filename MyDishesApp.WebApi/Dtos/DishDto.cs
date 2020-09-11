@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MyDishesApp.WebApi.Dtos.Base;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyDishesApp.WebApi.Dtos

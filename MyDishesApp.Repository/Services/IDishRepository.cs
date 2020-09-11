@@ -9,15 +9,16 @@ namespace MyDishesApp.Repository.Services
     /// </summary>
     public interface IDishRepository
     {
-        Task<bool> DishExists(int dishId);
-
         /// <summary>
         /// Get all dishes
         /// </summary>
-        //Task<IEnumerable<Dish>> GetDishesAsync();
+        Task<IEnumerable<Dish>> GetDishesAsync();
+
         //Task<Dish> GetDishAsync(int dishId);
-        Task AddDishAsync(Dish dish);
-        void DeleteDish(Dish dish);
+
+        //Task AddDishAsync(Dish dish);
+
+        //void DeleteDish(Dish dish);
 
         /// <summary>
         /// Method for saving the context

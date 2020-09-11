@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using MyDishesApp.WebApi.Dtos;
-using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
+using System;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -46,7 +42,7 @@ namespace MyDishesApp.WebApi.Controllers
 
         //// Get
         //[HttpGet("{ingredientId}")]
-        //public async Task<IActionResult> GetIngredientForDish(int dishId, int ingredientId)
+        //public async Task<ActionResult> GetIngredientForDish(int dishId, int ingredientId)
         //{
         //    if (!await _dishRepository.DishExists(dishId))
         //    {
@@ -60,11 +56,11 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    return Ok(Mapper.Map<IngredientDto>(ingredientFromRepo));
+        //    return Ok(_mapper.Map<IngredientDto>(ingredientFromRepo));
         //}
 
         //[HttpGet]
-        //public async Task<IActionResult> GetIngredientsForDish(int dishId)
+        //public async Task<ActionResult> GetIngredientsForDish(int dishId)
         //{
         //    if (!await _dishRepository.DishExists(dishId))
         //    {
@@ -78,12 +74,12 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    return Ok(Mapper.Map<IngredientDto[]>(ingredientsFromRepo));
+        //    return Ok(_mapper.Map<IngredientDto[]>(ingredientsFromRepo));
         //}
        
         //// Patch
         //[HttpPatch("{ingredientId}")]
-        //public async Task<IActionResult> PartiallyUpdateIngredient(int dishId, int ingredientId,
+        //public async Task<ActionResult> PartiallyUpdateIngredient(int dishId, int ingredientId,
         //    [FromBody] JsonPatchDocument<IngredientForUpdateDto> jsonPatchDocument)
         //{
         //    if (jsonPatchDocument == null)
@@ -104,7 +100,7 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    IngredientForUpdateDto ingredientToPatch = Mapper.Map<IngredientForUpdateDto>(ingredientFromRepo);
+        //    IngredientForUpdateDto ingredientToPatch = _mapper.Map<IngredientForUpdateDto>(ingredientFromRepo);
 
         //    jsonPatchDocument.ApplyTo(ingredientToPatch, ModelState);
         //    if (!ModelState.IsValid)
@@ -117,7 +113,7 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    Mapper.Map(ingredientToPatch, ingredientFromRepo);
+        //    _mapper.Map(ingredientToPatch, ingredientFromRepo);
 
         //    if (!await _ingredientRepository.SaveAsync())
         //    {
@@ -129,7 +125,7 @@ namespace MyDishesApp.WebApi.Controllers
 
         //// Delete
         //[HttpDelete("{ingredientId}")]
-        //public async Task<IActionResult> DeleteIngredientFromDish(int dishId, int ingredientId)
+        //public async Task<ActionResult> DeleteIngredientFromDish(int dishId, int ingredientId)
         //{
         //    if (!await _dishRepository.DishExists(dishId))
         //    {

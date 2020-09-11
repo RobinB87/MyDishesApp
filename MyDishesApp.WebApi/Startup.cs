@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,15 +7,13 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MyDishesApp.Repository.Data;
+using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
-using Microsoft.Extensions.Hosting;
-using MyDishesApp.Repository.Data;
-using MyDishesApp.Repository.Data.Entities;
-using MyDishesApp.Repository.Services;
-using MyDishesApp.WebApi.Dtos;
 
 namespace MyDishesApp.WebApi
 {
@@ -46,15 +45,19 @@ namespace MyDishesApp.WebApi
                     });
             });
 
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddControllers();
+
             services.AddScoped<IAuthorizationHandler, UserMustBeDishManagerRequirementHandler>();
 
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
-                // output formatters..
+                // TODO: Output formatters..
 
-                // input formatters
+                // Input formatters
                 var jsonInputFormatter = setupAction.InputFormatters
                    .OfType<SystemTextJsonInputFormatter>().FirstOrDefault();
 
@@ -79,15 +82,13 @@ namespace MyDishesApp.WebApi
             var connectionString = Configuration["ConnectionStrings:MyDishesAppDB"];
             services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
 
-            // register the repository
+            // Register the repositories
             services.AddScoped<IDishRepository, DishRepository>();
-
-            // register an IHttpContextAccessor so we can access the current
-            // HttpContext in services by injecting it
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            // register the user info service
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IUserInfoService, UserInfoService>();
+
+            // Register an IHttpContextAccessor so we can access the current HttpContext in services by injecting it
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             //    .AddIdentityServerAuthentication(options =>
@@ -116,20 +117,12 @@ namespace MyDishesApp.WebApi
                 });
             }
 
-            // TODO: Create mapping profile class
-            AutoMapper.Mapper.Initialize(config =>
-            {
-                config.CreateMap<Dish, DishDto>();
-                config.CreateMap<Dish, DishForUpdateDto>().ReverseMap();
-                config.CreateMap<IngredientForCreationDto, Ingredient>();
-                config.CreateMap<Ingredient, IngredientForUpdateDto>().ReverseMap();
-            });
-
-            // Enable CORS
-            app.UseCors("AllowAllOriginsHeadersAndMethods");
-            app.UseAuthentication();
-            app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("AllowAllOriginsHeadersAndMethods");
+
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -12,7 +12,7 @@ namespace MyDishesApp.Repository.Services
         //Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId);
         //Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId, IEnumerable<int> ingredientIds);
         //Task<Ingredient> GetIngredientForDishAsync(int dishId, int ingredientId);
-        void DeleteIngredientFromDish(Ingredient ingredient);
+        //void DeleteIngredientFromDish(Ingredient ingredient);
         //Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(IEnumerable<Ingredient> newIngredientEntities, int dishId);
 
         /// <summary>

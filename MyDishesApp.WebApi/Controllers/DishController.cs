@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +7,6 @@ using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +18,7 @@ namespace MyDishesApp.WebApi.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class DishController : Controller
     {
         private readonly IMapper _mapper;
@@ -48,25 +45,37 @@ namespace MyDishesApp.WebApi.Controllers
             _userInfoService = userInfoService ?? throw new ArgumentNullException(nameof(userInfoService));
         }
 
+        /// <summary>
+        /// Get all dishes
+        /// </summary>
+        /// <returns>A list of dishes</returns>
+        [HttpGet]
+        public async Task<ActionResult> GetDishes()
+        {
+            var dishes = _mapper.Map<IEnumerable<DishDto>>(await _dishRepository.GetDishesAsync());
+            return Ok(dishes);
+        }
+
         //[HttpGet]
-        //public async Task<IActionResult> GetDishes()
+        //public async Task<ActionResult> GetDishes()
         //{
-        //    if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-        //    {
-        //        return Forbid();
-        //    }
+        // TODO: Fix authentication
+        //    //if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
+        //    //{
+        //    //    return Forbid();
+        //    //}
 
         //    // TODO: Add GetDishesForManager
 
         //    var dishEntities = await _dishRepository.GetDishesAsync();
-        //    var dishes = Mapper.Map<IEnumerable<DishDto>>(dishEntities);
+        //    var dishes = _mapper.Map<IEnumerable<DishDto>>(dishEntities);
         //    return Ok(dishes);
         //}
 
         //[HttpGet("{dishId}", Name = "GetDish")]
         //[Authorize(Policy = "UserMustBeDishManager")]
         //[Authorize(Policy = "UserMustBeAdministrator")]
-        //public async Task<IActionResult> GetDish(int dishId)
+        //public async Task<ActionResult> GetDish(int dishId)
         //{
         //    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
 
@@ -75,73 +84,73 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    return Ok(Mapper.Map<DishDto>(dishFromRepo));
+        //    return Ok(_mapper.Map<DishDto>(dishFromRepo));
         //}
 
-        [HttpPost]
-        public async Task<IActionResult> AddDish([FromBody] DishDto dish)
-        {
-            if (!ModelState.IsValid)
-            {
-                return new UnprocessableEntityObjectResult(ModelState);
-            }
+        //[HttpPost]
+        //public async Task<ActionResult> AddDish([FromBody] DishDto dish)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return new UnprocessableEntityObjectResult(ModelState);
+        //    }
 
-            if (dish == null)
-            {
-                return BadRequest();
-            }
+        //    if (dish == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var ingredientNames = new List<string>();
-            foreach (IngredientDto ingredient in dish.Ingredients)
-            {
-                ingredientNames.Add(ingredient.Name);
-            }
+        //    var ingredientNames = new List<string>();
+        //    foreach (IngredientDto ingredient in dish.Ingredients)
+        //    {
+        //        ingredientNames.Add(ingredient.Name);
+        //    }
 
-            var dishEntity = Mapper.Map<Dish>(dish);
+        //    var dishEntity = _mapper.Map<Dish>(dish);
 
-            // TODO: add code below
-            //if (dishEntity.ManagerId == Guid.Empty)
-            //{
-            //    if (!Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-            //    {
-            //        return Forbid();
-            //    }
+        //    // TODO: add code below
+        //    //if (dishEntity.ManagerId == Guid.Empty)
+        //    //{
+        //    //    if (!Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
+        //    //    {
+        //    //        return Forbid();
+        //    //    }
 
-            //    dishEntity.ManagerId = userIdAsGuid;
-            //}
+        //    //    dishEntity.ManagerId = userIdAsGuid;
+        //    //}
 
-            await _dishRepository.AddDishAsync(dishEntity);
+        //    await _dishRepository.AddDishAsync(dishEntity);
 
-            try
-            {
-                await _dishRepository.SaveAsync();
-            }
-            catch (DbUpdateException dbEx)
-            {
-                SqlException sqlException = dbEx.InnerException as SqlException;
-                if (sqlException.Number == 2601)
-                {
-                    // log dbEx
-                    ModelState.AddModelError("UniqueDishName", "UniqueDishName|Dishname already exists. Please provide a different name.");
-                    return new UnprocessableEntityObjectResult(ModelState);
-                }
-                throw new Exception("Adding a dish failed on save");
-            }
-            catch (Exception ex)
-            {
-                // log ex
-                throw new Exception("Adding a dish failed on save");
-            }
+        //    try
+        //    {
+        //        await _dishRepository.SaveAsync();
+        //    }
+        //    catch (DbUpdateException dbEx)
+        //    {
+        //        SqlException sqlException = dbEx.InnerException as SqlException;
+        //        if (sqlException?.Number == 2601)
+        //        {
+        //            // log dbEx
+        //            ModelState.AddModelError("UniqueDishName", "UniqueDishName|Dishname already exists. Please provide a different name.");
+        //            return new UnprocessableEntityObjectResult(ModelState);
+        //        }
+        //        throw new Exception("Adding a dish failed on save");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Log(LogLevel.Error, "Adding a dish failed on save", ex);
+        //        throw;
+        //    }
 
-            var dishToReturn = Mapper.Map<DishDto>(dishEntity);
+        //    var dishToReturn = _mapper.Map<DishDto>(dishEntity);
 
-            return CreatedAtRoute("GetDish",
-                new { dishId = dishToReturn.DishId },
-                dishToReturn);
-        }
+        //    return CreatedAtRoute("GetDish",
+        //        new { dishId = dishToReturn.DishId },
+        //        dishToReturn);
+        //}
 
         //[HttpPatch("{dishId}")]
-        //public async Task<IActionResult> PartiallyUpdateDish(int dishId,
+        //public async Task<ActionResult> PartiallyUpdateDish(int dishId,
         //    [FromBody] JsonPatchDocument<DishForUpdateDto> jsonPatchDocument)
         //{
         //    if (jsonPatchDocument == null)
@@ -155,7 +164,7 @@ namespace MyDishesApp.WebApi.Controllers
         //        return BadRequest();
         //    }
 
-        //    var dishToPatch = Mapper.Map<DishForUpdateDto>(dishFromRepo);
+        //    var dishToPatch = _mapper.Map<DishForUpdateDto>(dishFromRepo);
 
         //    // if patchDocument is malformed, this is still a client error. Use ModelState
         //    jsonPatchDocument.ApplyTo(dishToPatch, ModelState);
@@ -169,7 +178,7 @@ namespace MyDishesApp.WebApi.Controllers
         //        return new UnprocessableEntityObjectResult(ModelState);
         //    }
 
-        //    Mapper.Map(dishToPatch, dishFromRepo);
+        //    _mapper.Map(dishToPatch, dishFromRepo);
 
         //    if (!await _dishRepository.SaveAsync())
         //    {
@@ -181,7 +190,7 @@ namespace MyDishesApp.WebApi.Controllers
         
         //// Delete dish
         //[HttpDelete("{dishId}")]
-        //public async Task<IActionResult> DeleteDish(int dishId)
+        //public async Task<ActionResult> DeleteDish(int dishId)
         //{
         //    // Check if dish exists.
         //    if (!await _dishRepository.DishExists(dishId))

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Data;
 
@@ -11,10 +11,10 @@ namespace MyDishesApp.WebApi
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            var host = CreateHostBuilder(args).Build();
 
             // Migrate and seed the database.
-            using (var scope = host.Services.CreateScope())
+            using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 try
                 {
@@ -29,13 +29,15 @@ namespace MyDishesApp.WebApi
                 }
             }
 
-            // run the web app
+            // Run the web app
             host.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

@@ -10,7 +10,8 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchUrl": "api/dishes",
+      "launchBrowser": true,
+      "launchUrl": "api/dish",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

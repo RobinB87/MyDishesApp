@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyDishesApp.WebApi.Dtos.Base;
 
 namespace MyDishesApp.WebApi.Dtos
 {

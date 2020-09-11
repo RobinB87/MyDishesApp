@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyDishesApp.WebApi.Dtos
+namespace MyDishesApp.WebApi.Dtos.Base
 {
+    /// <summary>
+    /// The ingredient dto base class
+    /// </summary>
     public abstract class IngredientAbstractBaseDto
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "required|Name is required.")]
@@ -15,8 +18,6 @@ namespace MyDishesApp.WebApi.Dtos
         [Required(AllowEmptyStrings = false, ErrorMessage = "required|Quantity is required.")]
         [Range(0.001, 999.99, ErrorMessage = "range|Unit price should be a numeric value.")]
         public double Quantity { get; set; }
-
-        public int DishId { get; set; } // Wellicht kan deze weg. Maar waren toen issues binnen frontend.
     }
 }
 

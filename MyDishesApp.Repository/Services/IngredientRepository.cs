@@ -56,10 +56,10 @@ namespace MyDishesApp.Repository.Services
         //    dish.Ingredients.Add(ingredient);
         //}
 
-        public void DeleteIngredientFromDish(Ingredient ingredient)
-        {
-            _context.Ingredients.Remove(ingredient);
-        }
+        //public void DeleteIngredientFromDish(Ingredient ingredient)
+        //{
+        //    _context.Ingredients.Remove(ingredient);
+        //}
 
         //public async Task AddIngredientOrIngredientCollectionToDishAndSumUpDuplicateQuantitiesAsync(IEnumerable<Ingredient> newIngredientEntities, int dishId)
         //{

@@ -2,6 +2,8 @@
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyDishesApp.Repository.Services
@@ -21,17 +23,14 @@ namespace MyDishesApp.Repository.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<bool> DishExists(int dishId)
+        // <inheritdoc />
+        public async Task<IEnumerable<Dish>> GetDishesAsync()
         {
-            return await _context.Dishes.AnyAsync(d => d.DishId == dishId);
+            return await _context.Dishes
+                .Include(x => x.DishIngredients)
+                .ThenInclude(x => x.Ingredient)
+                .ToListAsync();
         }
-
-        /// <inheritdoc />
-        //public async Task<IEnumerable<Dish>> GetDishesAsync()
-        //{
-        //    return await _context.Dishes.Include(i => i.Ingredients)
-        //        .OrderBy(d => d.Name).ToListAsync();
-        //}
 
         //public async Task<Dish> GetDishAsync(int dishId)
         //{
@@ -39,15 +38,15 @@ namespace MyDishesApp.Repository.Services
         //        .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
         //}
 
-        public async Task AddDishAsync(Dish dish)
-        {
-            await _context.Dishes.AddAsync(dish);
-        }
+        //public async Task AddDishAsync(Dish dish)
+        //{
+        //    await _context.Dishes.AddAsync(dish);
+        //}
 
-        public void DeleteDish(Dish dish)
-        {
-            _context.Dishes.Remove(dish);
-        }
+        //public void DeleteDish(Dish dish)
+        //{
+        //    _context.Dishes.Remove(dish);
+        //}
 
         /// <inheritdoc />
         public async Task<bool> SaveAsync()

@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyDishesApp.WebApi.Dtos
+namespace MyDishesApp.WebApi.Dtos.Base
 {
+    /// <summary>
+    /// The dish dto base class
+    /// </summary>
     public abstract class DishAbstractBaseDto : IValidatableObject
     {
         // Validation is necessary at various level, especially when apps grow. It helps stability of code and data integrity.
