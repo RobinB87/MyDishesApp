@@ -19,16 +19,16 @@ import { IngredientUpdateComponent } from "./dishes/ingredients/ingredient-updat
 import { IngredientsComponent } from "./dishes/ingredients/ingredients.component";
 import { IngredientService } from "./dishes/ingredients/shared/ingredient.service";
 import { DishService } from "./dishes/shared/dish.service";
-import { RedirectSilentRenewComponent } from "./redirect-silent-renew/redirect-silent-renew.component";
-import { AddAuthorizationHeaderInterceptor } from "./shared/add-authorization-header-interceptor";
+// import { RedirectSilentRenewComponent } from "./redirect-silent-renew/redirect-silent-renew.component";
+// import { AddAuthorizationHeaderInterceptor } from "./shared/add-authorization-header-interceptor";
 import { EnsureAcceptHeaderInterceptor } from "./shared/ensure-accept-header-interceptor";
 import { ErrorLoggerService } from "./shared/error-logger.service";
 import { FooterComponent } from "./shared/footer/footer.component";
 import { GlobalErrorHandler } from "./shared/global-error-handler";
 import { HandleHttpErrorInterceptor } from "./shared/handle-http-error-interceptor";
-import { OpenIdConnectService } from "./shared/open-id-connect.service";
-import { RequireAuthenticatedUserRouteGuardService } from "./shared/require-authenticated-user-route-guard.service";
-import { SigninOidcComponent } from "./signin-oidc/signin-oidc.component";
+// import { OpenIdConnectService } from './shared/open-id-connect.service';
+// import { RequireAuthenticatedUserRouteGuardService } from "./shared/require-authenticated-user-route-guard.service";
+// import { SigninOidcComponent } from './signin-oidc/signin-oidc.component';
 
 @NgModule({
   declarations: [
@@ -45,8 +45,8 @@ import { SigninOidcComponent } from "./signin-oidc/signin-oidc.component";
     DishDeleteModalComponent,
     IngredientDeleteModalComponent,
     FooterComponent,
-    SigninOidcComponent,
-    RedirectSilentRenewComponent,
+    // SigninOidcComponent,
+    // RedirectSilentRenewComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,21 +60,16 @@ import { SigninOidcComponent } from "./signin-oidc/signin-oidc.component";
   ],
   entryComponents: [DishDeleteModalComponent, IngredientDeleteModalComponent],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AddAuthorizationHeaderInterceptor,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AddAuthorizationHeaderInterceptor,
+    //   multi: true,
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: EnsureAcceptHeaderInterceptor,
       multi: true,
     },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: WriteOutJsonInterceptor,
-    //   multi: true
-    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HandleHttpErrorInterceptor,
@@ -84,8 +79,8 @@ import { SigninOidcComponent } from "./signin-oidc/signin-oidc.component";
     ErrorLoggerService,
     DishService,
     IngredientService,
-    OpenIdConnectService,
-    RequireAuthenticatedUserRouteGuardService,
+    // OpenIdConnectService,
+    // RequireAuthenticatedUserRouteGuardService,
   ],
   bootstrap: [AppComponent],
 })
