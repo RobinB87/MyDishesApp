@@ -1,6 +1,6 @@
-import { HttpEvent, HttpHandler, HttpRequest } from "@angular/common/http";
-import { HttpInterceptor } from "@angular/common/http/src/interceptor";
-import { Observable } from "rxjs/Observable";
+import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
+import { HttpInterceptor } from '@angular/common/http/src/interceptor';
+import { Observable } from 'rxjs/Observable';
 
 export class WriteOutJsonInterceptor implements HttpInterceptor {
   intercept(
@@ -9,6 +9,6 @@ export class WriteOutJsonInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next
       .handle(request)
-      .do((data) => console.log(JSON.stringify(data, null, "\t")));
+      .do((data) => console.log(JSON.stringify(data, null, '\t')));
   }
 }
