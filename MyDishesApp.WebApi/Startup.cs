@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Linq;
+using System;
+using System.Text;
 
 namespace MyDishesApp.WebApi
 {
@@ -29,39 +30,36 @@ namespace MyDishesApp.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("UserMustBeAdministrator", policyBuilder =>
+            services.AddControllers();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.RequireRole("Administrator");
-                });
-                options.AddPolicy(
-                    "UserMustBeDishManager",
-                    policyBuilder =>
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        policyBuilder.RequireAuthenticatedUser();
-                        policyBuilder.AddRequirements(new UserMustBeDishManagerRequirement("Administrator"));
-                    });
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
 
             services.AddAutoMapper(typeof(Startup));
-
-            services.AddControllers();
-
-            services.AddScoped<IAuthorizationHandler, UserMustBeDishManagerRequirementHandler>();
-
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-
-                // TODO: Output formatters..
-
-                // Input formatters
-                var jsonInputFormatter = setupAction.InputFormatters
-                   .OfType<SystemTextJsonInputFormatter>().FirstOrDefault();
-
-                jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.robin.createdish+json");
             })
             .AddNewtonsoftJson(options =>
             {
@@ -71,7 +69,6 @@ namespace MyDishesApp.WebApi
             });
 
             // Configure CORS so the API allows requests from JavaScript.  
-            // For demo purposes, all origins/headers/methods are allowed.  
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOriginsHeadersAndMethods",
@@ -85,17 +82,6 @@ namespace MyDishesApp.WebApi
             // Register the repositories
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IUserInfoService, UserInfoService>();
-
-            // Register an IHttpContextAccessor so we can access the current HttpContext in services by injecting it
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            //    .AddIdentityServerAuthentication(options =>
-            //    {
-            //        options.Authority = "https://localhost:44398";
-            //        options.ApiName = "dishesmanagementapi";
-            //    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,8 +106,8 @@ namespace MyDishesApp.WebApi
             app.UseRouting();
             app.UseCors("AllowAllOriginsHeadersAndMethods");
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
