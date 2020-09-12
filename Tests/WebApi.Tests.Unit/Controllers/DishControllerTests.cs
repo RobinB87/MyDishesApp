@@ -18,23 +18,19 @@ namespace WebApi.Tests.Unit.Controllers
         {
             [Fact]
             public void InitializeDishControllerCorrectly() => Assert.NotNull(
-                new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object, UserInfoServiceMock.Object));
+                new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenLoggerIsNull() => Assert.Throws<ArgumentNullException>("logger",
-                () => new DishController(null, MapperMock.Object, DishRepositoryMock.Object, UserInfoServiceMock.Object));
+                () => new DishController(null, MapperMock.Object, DishRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenMapperIsNull() => Assert.Throws<ArgumentNullException>("mapper",
-                () => new DishController(LoggerMock.Object, null, DishRepositoryMock.Object, UserInfoServiceMock.Object));
+                () => new DishController(LoggerMock.Object, null, DishRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDishRepositoryIsNull() => Assert.Throws<ArgumentNullException>("dishRepository",
-                () => new DishController(LoggerMock.Object, MapperMock.Object, null, UserInfoServiceMock.Object));
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenUserInfoServiceIsNull() => Assert.Throws<ArgumentNullException>("userInfoService",
-                () => new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object, null));
+                () => new DishController(LoggerMock.Object, MapperMock.Object, null));
         }
 
         public class GetDishes : DishControllerTestBase
@@ -356,15 +352,13 @@ namespace WebApi.Tests.Unit.Controllers
             protected readonly Mock<ILogger<DishController>> LoggerMock = new Mock<ILogger<DishController>>();
             protected readonly Mock<IMapper> MapperMock = new Mock<IMapper>();
             protected readonly Mock<IDishRepository> DishRepositoryMock = new Mock<IDishRepository>();
-            protected readonly Mock<IUserInfoService> UserInfoServiceMock = new Mock<IUserInfoService>();
 
             protected DishController CreateController()
             {
                 return new DishController(
                     LoggerMock.Object,
                     MapperMock.Object,
-                    DishRepositoryMock.Object,
-                    UserInfoServiceMock.Object);
+                    DishRepositoryMock.Object);
             }
 
             protected void VerifyMocks()
@@ -372,7 +366,6 @@ namespace WebApi.Tests.Unit.Controllers
                 LoggerMock.Verify();
                 MapperMock.Verify();
                 DishRepositoryMock.Verify();
-                UserInfoServiceMock.Verify();
             }
         }
     }

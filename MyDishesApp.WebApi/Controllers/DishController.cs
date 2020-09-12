@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Services;
+using MyDishesApp.WebApi.Authorization;
 using MyDishesApp.WebApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -23,7 +24,6 @@ namespace MyDishesApp.WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IDishRepository _dishRepository;
-        private readonly IUserInfoService _userInfoService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DishController" />
@@ -31,17 +31,14 @@ namespace MyDishesApp.WebApi.Controllers
         /// <param name="logger">The logger to use</param>
         /// <param name="mapper">The mapper to use</param>
         /// <param name="dishRepository">The repository to use</param>
-        /// <param name="userInfoService">The user info service</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dishRepository" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="userInfoService" /> is null.</exception>
-        public DishController(ILogger<DishController> logger, IMapper mapper, IDishRepository dishRepository, IUserInfoService userInfoService)
+        public DishController(ILogger<DishController> logger, IMapper mapper, IDishRepository dishRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
-            _userInfoService = userInfoService ?? throw new ArgumentNullException(nameof(userInfoService));
         }
 
         /// <summary>
@@ -49,6 +46,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <returns>A list of dishes</returns>
         [HttpGet]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
         {
             var dishEntities = await _dishRepository.GetDishesAsync();

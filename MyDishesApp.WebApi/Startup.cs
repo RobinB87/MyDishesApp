@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,28 +32,33 @@ namespace MyDishesApp.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("UserMustBeAdministrator", policyBuilder =>
+            services.AddControllers();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.RequireRole("Administrator");
-                });
-                options.AddPolicy(
-                    "UserMustBeDishManager",
-                    policyBuilder =>
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        policyBuilder.RequireAuthenticatedUser();
-                        policyBuilder.AddRequirements(new UserMustBeDishManagerRequirement("Administrator"));
-                    });
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
 
             services.AddAutoMapper(typeof(Startup));
-
-            services.AddControllers();
-
-            services.AddScoped<IAuthorizationHandler, UserMustBeDishManagerRequirementHandler>();
-
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -89,41 +93,6 @@ namespace MyDishesApp.WebApi
             // Register the repositories
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IUserInfoService, UserInfoService>();
-
-            // Register an IHttpContextAccessor so we can access the current HttpContext in services by injecting it
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt: Issuer"],
-                        ValidAudience = Configuration["Jwt: Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt: SecretKey"])),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
-
-            services.AddAuthorization(config =>
-            {
-                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-                config.AddPolicy(Policies.User, Policies.UserPolicy());
-            });
-
-            //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            //    .AddIdentityServerAuthentication(options =>
-            //    {
-            //        options.Authority = "https://localhost:44398";
-            //        options.ApiName = "dishesmanagementapi";
-            //    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
