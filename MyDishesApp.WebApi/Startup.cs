@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +14,6 @@ using MyDishesApp.WebApi.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace MyDishesApp.WebApi
@@ -71,7 +69,6 @@ namespace MyDishesApp.WebApi
             });
 
             // Configure CORS so the API allows requests from JavaScript.  
-            // For demo purposes, all origins/headers/methods are allowed.  
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOriginsHeadersAndMethods",

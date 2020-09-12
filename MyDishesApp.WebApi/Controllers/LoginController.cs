@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -22,28 +21,19 @@ namespace MyDishesApp.WebApi.Controllers
     [ApiController]
     public class LoginController : Controller
     {
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
-        private readonly List<User> _appUsers = new List<User>
-        {
-            new User { FullName = "Robin Robster", UserName = "admin", Password = "1234", UserRole = "Admin" },
-            new User { FullName = "Test User", UserName = "user", Password = "1234", UserRole = "User" }
-        };
 
         /// <summary>
         /// Initializes a new instance of <see cref="LoginController" />
         /// </summary>
         /// <param name="logger">The logger to use</param>
-        /// <param name="mapper">The mapper to use</param>
         /// <param name="config">The configuration to use</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="config" /> is null.</exception>
-        public LoginController(ILogger<DishController> logger, IMapper mapper, IConfiguration config)
+        public LoginController(ILogger<DishController> logger, IConfiguration config)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
@@ -54,7 +44,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// <returns>Login response</returns>
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult Login([FromBody] User login)
+        public ActionResult Login(User login)
         {
             ActionResult response = Unauthorized();
             var user = AuthenticateUser(login);
@@ -72,11 +62,26 @@ namespace MyDishesApp.WebApi.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Authenticate the user via the appsettings.json
+        /// TODO: fix authentication via database
+        /// </summary>
+        /// <param name="loginCredentials"></param>
+        /// <returns>A user</returns>
         private User AuthenticateUser(User loginCredentials)
         {
-            return _appUsers.SingleOrDefault(x => x.UserName == loginCredentials.UserName && x.Password == loginCredentials.Password);
+            return _config.GetSection("Jwt:Users")
+                ?.Get<IEnumerable<User>>()
+                ?.FirstOrDefault(
+                    u => u?.UserName == loginCredentials?.UserName && 
+                         u?.Password == loginCredentials?.Password);
         }
 
+        /// <summary>
+        /// Generate a Jwt Token
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns>A token</returns>
         private string GenerateJwtToken(User userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
