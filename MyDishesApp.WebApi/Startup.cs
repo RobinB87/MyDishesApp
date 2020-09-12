@@ -62,14 +62,6 @@ namespace MyDishesApp.WebApi
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-
-                // TODO: Output formatters..
-
-                // Input formatters
-                var jsonInputFormatter = setupAction.InputFormatters
-                   .OfType<SystemTextJsonInputFormatter>().FirstOrDefault();
-
-                jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.robin.createdish+json");
             })
             .AddNewtonsoftJson(options =>
             {

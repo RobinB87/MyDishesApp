@@ -47,12 +47,18 @@ namespace MyDishesApp.WebApi.Controllers
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
+        /// <summary>
+        /// Method to be able to login
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns>Login response</returns>
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login([FromBody] User login)
+        public ActionResult Login([FromBody] User login)
         {
-            IActionResult response = Unauthorized();
-            User user = AuthenticateUser(login);
+            ActionResult response = Unauthorized();
+            var user = AuthenticateUser(login);
+
             if (user != null)
             {
                 var tokenString = GenerateJwtToken(user);
@@ -62,6 +68,7 @@ namespace MyDishesApp.WebApi.Controllers
                     userDetails = user,
                 });
             }
+
             return response;
         }
 
