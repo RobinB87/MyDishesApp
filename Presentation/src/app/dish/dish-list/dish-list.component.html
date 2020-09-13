@@ -1,0 +1,33 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Dishes</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul class="dishes">
+      <li *ngFor="let dish of dishes; trackBy: byId" class="item-container">
+        <button
+          mat-button
+          mat-suffix
+          mat-icon-button
+          color="accent"
+          class="delete-button"
+          aria-label="Delete"
+          (click)="deleteDish(dish)"
+          matTooltip="Delete the dish"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <div
+          class="selectable-item"
+          [class.selected]="dish === selectedDish"
+          (click)="onSelect(dish)"
+        >
+          <div class="badge">{{ dish.id }}</div>
+          <div class="item-text">
+            <div class="name">{{ dish.name }}</div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </mat-card-content>
+</mat-card>

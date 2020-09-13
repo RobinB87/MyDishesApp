@@ -1,0 +1,34 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">My dishes</div>
+  <a
+    class="btn btn-primary"
+    style="width: 100px; margin-left: 10px; margin-top: 10px"
+    [routerLink]="['/dish-add']"
+  >
+    Add a dish
+  </a>
+  <br /><br />
+
+  <div class="content-container">
+    <div class="list-container">
+      <div *ngIf="dishes$ | async as dishes">
+        <mat-spinner
+          *ngIf="loading$ | async; else dishes"
+          mode="indeterminate"
+          color="accent"
+        ></mat-spinner>
+        <ng-template #dishList>
+          <app-dish-list
+            [dishes]="dishes"
+            [selectedDish]="selected"
+            [commands]="commands"
+          ></app-dish-list>
+        </ng-template>
+      </div>
+    </div>
+    <!-- <div class="detail-container">
+      <app-dish-detail *ngIf="selected" [dish]="selected" [commands]="commands">
+      </app-dish-detail>
+    </div> -->
+  </div>
+</div>
