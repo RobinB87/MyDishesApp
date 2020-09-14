@@ -14,7 +14,11 @@ namespace MyDishesApp.Repository.Services
         /// </summary>
         Task<IEnumerable<Dish>> GetDishesAsync();
 
-        //Task<Dish> GetDishAsync(int dishId);
+        /// <summary>
+        /// Get a dish by id
+        /// </summary>
+        /// <param name="id">The dish id</param>
+        Task<Dish> GetDishAsync(int id);
 
         //Task AddDishAsync(Dish dish);
 
