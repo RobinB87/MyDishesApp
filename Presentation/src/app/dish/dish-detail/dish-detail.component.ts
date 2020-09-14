@@ -17,6 +17,6 @@ export class DishDetailComponent implements OnInit {
   constructor(private store: Store<IAppState>, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.store.dispatch(new GetDish(this.route.snapshot.params.id));
+    this.store.dispatch(new GetDish(this.route.snapshot.params.dishId));
   }
 }

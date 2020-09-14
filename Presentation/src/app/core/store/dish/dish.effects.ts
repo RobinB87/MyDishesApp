@@ -29,8 +29,8 @@ export class DishEffects {
     ofType<GetDish>(EDishActions.GetDish),
     map((action) => action.payload),
     withLatestFrom(this.store.pipe(select(selectDishList))),
-    switchMap(([dishId, dishes]) => {
-      const selectedDish = dishes.filter((dish) => dish.dishId === +dishId)[0];
+    switchMap(([id, dishes]) => {
+      const selectedDish = dishes.filter((dish) => dish.dishId === +id)[0];
       return of(new GetDishSuccess(selectedDish));
     })
   );
