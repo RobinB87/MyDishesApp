@@ -27,16 +27,19 @@ namespace MyDishesApp.Repository.Services
         public async Task<IEnumerable<Dish>> GetDishesAsync()
         {
             return await _context.Dishes
-                .Include(x => x.DishIngredients)
-                .ThenInclude(x => x.Ingredient)
+                .Include(d => d.DishIngredients)
+                .ThenInclude(d => d.Ingredient)
                 .ToListAsync();
         }
 
-        //public async Task<Dish> GetDishAsync(int dishId)
-        //{
-        //    return await _context.Dishes.Include(i => i.Ingredients)
-        //        .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
-        //}
+        // <inheritdoc />
+        public async Task<Dish> GetDishAsync(int id)
+        {
+            return await _context.Dishes
+                .Include(d => d.DishIngredients)
+                .ThenInclude(d => d.Ingredient)
+                .FirstOrDefaultAsync(d => d.DishId == id);
+        }
 
         //public async Task AddDishAsync(Dish dish)
         //{

@@ -1,0 +1,13 @@
+<h4>The dish</h4>
+<div class="dish" *ngIf="dish$ | async as dish">
+  {{ dish.name }}
+  {{ dish.country }}
+
+  <li *ngFor="let ingredient of dish.ingredients">
+    {{ ingredient.name }}
+    {{ ingredient.pricePerUnit }}
+    {{ ingredient.quantity }}
+  </li>
+
+  {{ dish.recipe }}
+</div>

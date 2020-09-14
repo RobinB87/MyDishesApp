@@ -1,0 +1,40 @@
+<h3>The dishes</h3>
+
+<div class="panel-body">
+  <div class="table-responsive">
+    <table class="table" *ngIf="dishes$">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Country</th>
+          <!-- <th>Ingredients</th> -->
+          <!-- <th>Dish price</th> -->
+        </tr>
+      </thead>
+
+      <tbody>
+        <!--TODO: remove ingredients from table and show them when you click the dish. Instead add totalDishPrice item.-->
+
+        <tr
+          *ngFor="let dish of dishes$ | async"
+          (click)="navigateToDish(dish.dishId)"
+        >
+          <td>{{ dish.name }}</td>
+          <td>{{ dish.country }}</td>
+          <!-- <td>{{ calculateSumOfNumberOfIngredients(dish) }}</td> -->
+          <!-- <td>{{ calculateSumOfIngredientPrices(dish) | currency: 'EUR' }}</td> -->
+
+          <td>
+            <a>
+              <!-- <a
+              class="btn btn-primary"
+              [routerLink]="['/dish-update', dish.dishId]"
+            > -->
+              Edit
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
