@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Dish } from '../../core/models';
 import { DishAdd } from '../../core/store/dish/dish.actions';
 
+/* The dish add component */
 @Component({
   selector: 'app-dish-add',
   templateUrl: './dish-add.component.html',

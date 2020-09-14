@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Dish } from '../../models';
 import { DishService } from '../../services/dish.service';
 import { IAppState } from '../app.state';
-import { EDishActions, GetDishes, GetDishesSuccess } from './dish.actions';
+import {
+  EDishActions,
+  GetDish,
+  GetDishes,
+  GetDishesSuccess,
+  GetDishSuccess,
+} from './dish.actions';
+import { selectDishList } from './dish.selectors';
 
 @Injectable()
 export class DishEffects {
@@ -14,12 +21,18 @@ export class DishEffects {
   getDishes$ = this.actions$.pipe(
     ofType<GetDishes>(EDishActions.GetDishes),
     switchMap(() => this.dishService.getDishes()),
-
     switchMap((dishes: Dish[]) => of(new GetDishesSuccess(dishes)))
+  );
 
-    // switchMap((dishHttp: IDishHttp) =>
-    //   of(new GetDishesSuccess(dishHttp.dishes))
-    // )
+  @Effect()
+  getDish$ = this.actions$.pipe(
+    ofType<GetDish>(EDishActions.GetDish),
+    map((action) => action.payload),
+    withLatestFrom(this.store.pipe(select(selectDishList))),
+    switchMap(([dishId, dishes]) => {
+      const selectedDish = dishes.filter((dish) => dish.dishId === +dishId)[0];
+      return of(new GetDishSuccess(selectedDish));
+    })
   );
 
   constructor(

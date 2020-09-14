@@ -2,7 +2,7 @@ import { Dish } from '../../models';
 
 export interface IDishState {
   dishes: Dish[];
-  selectedDish: Dish[];
+  selectedDish: Dish;
 }
 
 export const initialDishState: IDishState = {

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Dish } from '../models';
 
+/** The dish service */
 @Injectable({
   providedIn: 'root',
 })
@@ -13,11 +14,13 @@ export class DishService {
   constructor(private http: HttpClient) {}
 
   /** Service call to get all dishes */
-  // public getDishes(): Observable<IDishHttp> {
-  //   return this.http.get<IDishHttp>(`${this.apiUrl}/dish`);
-  // }
   public getDishes(): Observable<Dish[]> {
     return this.http.get<Dish[]>(`${this.apiUrl}/dish`);
+  }
+
+  /** Service call to get a dish by id */
+  public getDish(id: number): Observable<Dish> {
+    return this.http.get<Dish>(`${this.apiUrl}/dish/${id}`);
   }
 
   /** Service call to create a dish */

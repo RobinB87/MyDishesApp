@@ -12,7 +12,12 @@ export const dishReducers = (
         dishes: action.payload,
       };
     }
-
+    case EDishActions.GetDishSuccess: {
+      return {
+        ...state,
+        selectedDish: action.payload,
+      };
+    }
     default:
       return state;
   }

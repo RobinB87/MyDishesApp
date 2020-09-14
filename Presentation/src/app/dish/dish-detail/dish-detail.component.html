@@ -1,0 +1,7 @@
+<h4>The dish</h4>
+<div class="dish" *ngIf="dish$ | async as dish">
+  {{ dish.name }}
+  {{ dish.ingredients }}
+  {{ dish.country }}
+  {{ dish.recipe }}
+</div>

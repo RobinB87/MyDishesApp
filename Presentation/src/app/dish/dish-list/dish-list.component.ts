@@ -5,6 +5,7 @@ import { IAppState } from '../../core/store/app.state';
 import { GetDishes } from '../../core/store/dish/dish.actions';
 import { selectDishList } from '../../core/store/dish/dish.selectors';
 
+/* The dish list component */
 @Component({
   selector: 'app-dish-list',
   templateUrl: './dish-list.component.html',
@@ -17,6 +18,10 @@ export class DishListComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new GetDishes());
+  }
+
+  navigateToDish(dishId: number) {
+    this.router.navigate(['dish', dishId]);
   }
 
   // removeDish(dishIndex) {
