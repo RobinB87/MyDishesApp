@@ -54,11 +54,6 @@ namespace MyDishesApp.WebApi.Controllers
             return _mapper.Map<IEnumerable<DishDto>>(dishEntities).ToList();
         }
 
-        /// <summary>
-        /// Get a dish by id
-        /// </summary>
-        /// <param name="id">The dish id</param>
-        /// <returns>A dish</returns>
         [HttpGet("{id}", Name = "GetDish")]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
@@ -72,6 +67,10 @@ namespace MyDishesApp.WebApi.Controllers
 
             return _mapper.Map<DishDto>(dishEntity);
         }
+
+
+
+
 
 
 

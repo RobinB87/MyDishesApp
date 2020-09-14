@@ -41,12 +41,6 @@ namespace MyDishesApp.Repository.Services
                 .FirstOrDefaultAsync(d => d.DishId == id);
         }
 
-        //public async Task<Dish> GetDishAsync(int dishId)
-        //{
-        //    return await _context.Dishes.Include(i => i.Ingredients)
-        //        .Where(d => d.DishId == dishId).FirstOrDefaultAsync();
-        //}
-
         //public async Task AddDishAsync(Dish dish)
         //{
         //    await _context.Dishes.AddAsync(dish);
