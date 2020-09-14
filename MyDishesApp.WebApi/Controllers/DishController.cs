@@ -18,7 +18,7 @@ namespace MyDishesApp.WebApi.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class DishController : Controller
     {
         private readonly IMapper _mapper;
@@ -46,7 +46,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <returns>A list of dishes</returns>
         [HttpGet]
-        [Authorize(Policy = Policies.Admin)]
+        //[Authorize(Policy = Policies.Admin)]
         public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
         {
             var dishEntities = await _dishRepository.GetDishesAsync();
