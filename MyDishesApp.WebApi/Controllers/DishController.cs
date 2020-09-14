@@ -47,13 +47,31 @@ namespace MyDishesApp.WebApi.Controllers
         /// <returns>A list of dishes</returns>
         [HttpGet]
         //[Authorize(Policy = Policies.Admin)]
+        //[Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
         {
             var dishEntities = await _dishRepository.GetDishesAsync();
             return _mapper.Map<IEnumerable<DishDto>>(dishEntities).ToList();
         }
 
+        /// <summary>
+        /// Get a dish by id
+        /// </summary>
+        /// <param name="id">The dish id</param>
+        /// <returns>A dish</returns>
+        [HttpGet("{id}", Name = "GetDish")]
+        //[Authorize(Policy = Policies.Admin)]
+        //[Authorize(Policy = Policies.User)]
+        public async Task<ActionResult<DishDto>> GetDish(int id)
+        {
+            var dishEntity = await _dishRepository.GetDishAsync(id);
+            if (dishEntity == null)
+            {
+                return BadRequest();
+            }
 
+            return _mapper.Map<DishDto>(dishEntity);
+        }
 
 
 
@@ -188,7 +206,7 @@ namespace MyDishesApp.WebApi.Controllers
 
         //    return NoContent();
         //}
-        
+
         //// Delete dish
         //[HttpDelete("{dishId}")]
         //public async Task<ActionResult> DeleteDish(int dishId)
