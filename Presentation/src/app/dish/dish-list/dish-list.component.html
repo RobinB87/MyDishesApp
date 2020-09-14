@@ -1,7 +1,7 @@
 <h4>List of Dishes</h4>
 <ul class="dishes">
-  <li *ngFor="let dish of dishes | async; let i = index">
+  <li *ngFor="let dish of dishes$ | async; let i = index">
     <span>{{ i + 1 }}.</span> {{ dish.name }}
-    <button style="float: right" (click)="removeDish(i)">Remove</button>
+    <!-- <button style="float: right" (click)="removeDish(i)">Remove</button> -->
   </li>
 </ul>

@@ -1,22 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { Dish } from '../../core/models';
-import { DishRemove } from '../../core/store/dish/dish.actions';
+import { IAppState } from '../../core/store/app.state';
+import { GetDishes } from '../../core/store/dish/dish.actions';
+import { selectDishList } from '../../core/store/dish/dish.selectors';
 
 @Component({
   selector: 'app-dish-list',
   templateUrl: './dish-list.component.html',
   styleUrls: ['./dish-list.component.css'],
 })
-export class DishListComponent {
-  dishes: Observable<Dish[]>;
+export class DishListComponent implements OnInit {
+  dishes$ = this.store.pipe(select(selectDishList));
 
-  constructor(private store: Store<{ dishes: Dish[] }>) {
-    this.dishes = store.pipe(select('dishes'));
+  constructor(private store: Store<IAppState>, private router: Router) {}
+
+  ngOnInit() {
+    this.store.dispatch(new GetDishes());
   }
 
-  removeDish(dishIndex) {
-    this.store.dispatch(new DishRemove(dishIndex));
-  }
+  // removeDish(dishIndex) {
+  //   this.store.dispatch(new DishRemove(dishIndex));
+  // }
 }

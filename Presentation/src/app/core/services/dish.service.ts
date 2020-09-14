@@ -7,14 +7,17 @@ import { Dish } from '../models';
 @Injectable({
   providedIn: 'root',
 })
-export class DishServiceService {
-  apiUrl = environment.tempJsonApi;
+export class DishService {
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   /** Service call to get all dishes */
-  public getAll(): Observable<Dish[]> {
-    return this.http.get<Dish[]>(`${this.apiUrl}/`);
+  // public getDishes(): Observable<IDishHttp> {
+  //   return this.http.get<IDishHttp>(`${this.apiUrl}/dish`);
+  // }
+  public getDishes(): Observable<Dish[]> {
+    return this.http.get<Dish[]>(`${this.apiUrl}/dish`);
   }
 
   /** Service call to create a dish */
