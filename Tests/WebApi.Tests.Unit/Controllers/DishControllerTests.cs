@@ -18,19 +18,23 @@ namespace WebApi.Tests.Unit.Controllers
         {
             [Fact]
             public void InitializeDishControllerCorrectly() => Assert.NotNull(
-                new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object));
+                new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object, IngredientRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenLoggerIsNull() => Assert.Throws<ArgumentNullException>("logger",
-                () => new DishController(null, MapperMock.Object, DishRepositoryMock.Object));
+                () => new DishController(null, MapperMock.Object, DishRepositoryMock.Object, IngredientRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenMapperIsNull() => Assert.Throws<ArgumentNullException>("mapper",
-                () => new DishController(LoggerMock.Object, null, DishRepositoryMock.Object));
+                () => new DishController(LoggerMock.Object, null, DishRepositoryMock.Object, IngredientRepositoryMock.Object));
 
             [Fact]
             public void ThrowsArgumentNullExceptionWhenDishRepositoryIsNull() => Assert.Throws<ArgumentNullException>("dishRepository",
-                () => new DishController(LoggerMock.Object, MapperMock.Object, null));
+                () => new DishController(LoggerMock.Object, MapperMock.Object, null, IngredientRepositoryMock.Object));
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenIngredientRepositoryIsNull() => Assert.Throws<ArgumentNullException>("ingredientRepository",
+                () => new DishController(LoggerMock.Object, MapperMock.Object, DishRepositoryMock.Object, null));
         }
 
         public class GetDishes : DishControllerTestBase
@@ -352,13 +356,15 @@ namespace WebApi.Tests.Unit.Controllers
             protected readonly Mock<ILogger<DishController>> LoggerMock = new Mock<ILogger<DishController>>();
             protected readonly Mock<IMapper> MapperMock = new Mock<IMapper>();
             protected readonly Mock<IDishRepository> DishRepositoryMock = new Mock<IDishRepository>();
+            protected readonly Mock<IIngredientRepository> IngredientRepositoryMock = new Mock<IIngredientRepository>();
 
             protected DishController CreateController()
             {
                 return new DishController(
                     LoggerMock.Object,
                     MapperMock.Object,
-                    DishRepositoryMock.Object);
+                    DishRepositoryMock.Object,
+                    IngredientRepositoryMock.Object);
             }
 
             protected void VerifyMocks()
@@ -366,6 +372,7 @@ namespace WebApi.Tests.Unit.Controllers
                 LoggerMock.Verify();
                 MapperMock.Verify();
                 DishRepositoryMock.Verify();
+                IngredientRepositoryMock.Verify();
             }
         }
     }

@@ -10,6 +10,12 @@ namespace MyDishesApp.Repository.Services
     public interface IDishRepository
     {
         /// <summary>
+        /// Check if a dish exists by name
+        /// </summary>
+        /// <param name="name">The name</param>
+        Task<bool> DishExists(string name);
+
+        /// <summary>
         /// Get all dishes
         /// </summary>
         Task<IEnumerable<Dish>> GetDishesAsync();
@@ -20,7 +26,11 @@ namespace MyDishesApp.Repository.Services
         /// <param name="id">The dish id</param>
         Task<Dish> GetDishAsync(int id);
 
-        //Task AddDishAsync(Dish dish);
+        /// <summary>
+        /// Add a dish to the database
+        /// </summary>
+        /// <param name="dish">The dish</param>
+        Task AddDishAsync(Dish dish);
 
         //void DeleteDish(Dish dish);
 

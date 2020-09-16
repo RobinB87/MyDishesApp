@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using MyDishesApp.Repository.Data.Entities;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -22,21 +25,25 @@ namespace MyDishesApp.WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IDishRepository _dishRepository;
+        private readonly IIngredientRepository _ingredientRepository;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DishController" />
         /// </summary>
         /// <param name="logger">The logger to use</param>
         /// <param name="mapper">The mapper to use</param>
-        /// <param name="dishRepository">The repository to use</param>
+        /// <param name="dishRepository">The dish repository to use</param>
+        /// <param name="ingredientRepository">The ingredient repository to use</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dishRepository" /> is null.</exception>
-        public DishController(ILogger<DishController> logger, IMapper mapper, IDishRepository dishRepository)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="ingredientRepository" /> is null.</exception>
+        public DishController(ILogger<DishController> logger, IMapper mapper, IDishRepository dishRepository, IIngredientRepository ingredientRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
+            _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
         }
 
         /// <summary>
@@ -52,6 +59,10 @@ namespace MyDishesApp.WebApi.Controllers
             return _mapper.Map<IEnumerable<DishDto>>(dishEntities).ToList();
         }
 
+        /// <summary>
+        /// Get a dish
+        /// </summary>
+        /// <returns>A dish</returns>
         [HttpGet("{id}", Name = "GetDish")]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
@@ -65,6 +76,81 @@ namespace MyDishesApp.WebApi.Controllers
 
             return _mapper.Map<DishDto>(dishEntity);
         }
+
+        /// <summary>
+        /// Add a dish to the database
+        /// </summary>
+        /// <param name="dish">The dish</param>
+        /// <returns></returns>
+        [HttpPost]
+        //[Authorize(Policy = Policies.Admin)]
+        //[Authorize(Policy = Policies.User)]
+        public async Task<ActionResult> AddDish(DishDto dish)
+        {
+            if (dish == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
+            if (await _dishRepository.DishExists(dish.Name))
+            {
+                ModelState.AddModelError("UniqueDishName", "UniqueDish|Dish name already exists. Please provide a different name.");
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
+            // Map the dish to an entity
+            var dishEntity = _mapper.Map<Dish>(dish);
+            dishEntity.DishIngredients = new List<DishIngredient>();
+            foreach (var ingredient in dish.Ingredients)
+            {
+                // Check if the ingredient already exists
+                var ingredientEntity = await _ingredientRepository.GetIngredient(ingredient.Name);
+                if (ingredientEntity == null)
+                {
+                    ingredientEntity = _mapper.Map<Ingredient>(ingredient);
+                }
+
+                // Create the dish ingredient link
+                var dishIngredient = new DishIngredient
+                {
+                    Dish = dishEntity,
+                    Ingredient = ingredientEntity,
+                    Quantity = ingredient.Quantity
+                };
+
+                // Add the link to the dish
+                dishEntity.DishIngredients.Add(dishIngredient);
+            }
+
+            // Save the dish
+            await _dishRepository.AddDishAsync(dishEntity);
+            try
+            {
+                await _dishRepository.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, "Adding a dish failed on save", e);
+                throw;
+            }
+
+            // Map the new entity back to a dto, to be able to create a 201 response
+            var dishToReturn = _mapper.Map<DishDto>(dishEntity);
+            return CreatedAtRoute("GetDish",
+                new
+                {
+                    id = dishToReturn.DishId
+                },
+                dishToReturn);
+        }
+
+
+
 
 
 

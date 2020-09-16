@@ -3,7 +3,6 @@ using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyDishesApp.Repository.Services
@@ -24,6 +23,13 @@ namespace MyDishesApp.Repository.Services
         }
 
         // <inheritdoc />
+        public async Task<bool> DishExists(string name)
+        {
+            return await _context.Dishes.AnyAsync(d =>
+                d.Name.ToLower() == name.ToLower()); 
+        }
+
+        // <inheritdoc />
         public async Task<IEnumerable<Dish>> GetDishesAsync()
         {
             return await _context.Dishes
@@ -41,10 +47,11 @@ namespace MyDishesApp.Repository.Services
                 .FirstOrDefaultAsync(d => d.DishId == id);
         }
 
-        //public async Task AddDishAsync(Dish dish)
-        //{
-        //    await _context.Dishes.AddAsync(dish);
-        //}
+        // <inheritdoc />
+        public async Task AddDishAsync(Dish dish)
+        {
+            await _context.Dishes.AddAsync(dish);
+        }
 
         //public void DeleteDish(Dish dish)
         //{
