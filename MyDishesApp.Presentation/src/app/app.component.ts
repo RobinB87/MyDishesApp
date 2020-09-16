@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { AuthService } from "./shared/services/auth.service";
 
 @Component({
   selector: "app-root",
@@ -10,7 +11,11 @@ export class AppComponent {
   clientHeight: number;
 
   // constructor(private openIdConnectService: OpenIdConnectService) {
-  constructor() {
+  constructor(private authService: AuthService) {
+    if (localStorage.getItem("authToken")) {
+      this.authService.setUserDetails();
+    }
+
     this.clientHeight = window.innerHeight;
   }
 }
