@@ -1,4 +1,5 @@
-﻿using MyDishesApp.Repository.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
 using System;
 using System.Threading.Tasks;
@@ -23,6 +24,18 @@ namespace MyDishesApp.Repository.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
         }
+
+        // <inheritdoc />
+        public async Task<Ingredient> GetIngredient(string name)
+        {
+            return await _context.Ingredients.FirstOrDefaultAsync(i => i.Name == name);
+        }
+
+        //// <inheritdoc />
+        //public async Task AddIngredient(Ingredient ingredient)
+        //{
+        //    await _context.Ingredients.AddAsync(ingredient);
+        //}
 
         //public async Task<IEnumerable<Ingredient>> GetIngredientsForDishAsync(int dishId)
         //{

@@ -15,7 +15,7 @@ namespace MyDishesApp.WebApi.Dtos.Base
         public string Country { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "required|Recipe is required.")]
-        [MinLength(50, ErrorMessage = "minLength|Recipe is too short.")]
+        [MinLength(30, ErrorMessage = "minLength|Recipe is too short.")]
         public string Recipe { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

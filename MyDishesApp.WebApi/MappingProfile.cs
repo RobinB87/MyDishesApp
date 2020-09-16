@@ -15,17 +15,18 @@ namespace MyDishesApp.WebApi
         /// </summary>
         public MappingProfile()
         {
-            //Source, Destination
+            // Source, Destination
             CreateMap<Dish, DishDto>()
-                .ForMember(d => d.Ingredients,  opt => opt.MapFrom(s => s.DishIngredients.Select(y => y.Ingredient).ToList()));
+                .ForMember(d => d.Ingredients,  o => o.MapFrom(s => s.DishIngredients.Select(y => y.Ingredient).ToList()));
 
-            CreateMap<Ingredient, IngredientDto>()
-                .ForMember(d => d.Quantity, opt => opt.MapFrom(s => s.DishIngredients.Select(i => i.Quantity).FirstOrDefault()));
+            CreateMap<DishDto, Dish>()
+                .ForMember(d => d.DishIngredients, o => o.Ignore());
+
+            CreateMap<IngredientDto, Ingredient>()
+                .ForMember(d => d.DishIngredients, o => o.Ignore());
         }
 
-        //    config.CreateMap<Dish, DishDto>();
-        //    config.CreateMap<Dish, DishForUpdateDto>().ReverseMap();
-        //    config.CreateMap<IngredientForCreationDto, Ingredient>();
-        //    config.CreateMap<Ingredient, IngredientForUpdateDto>().ReverseMap();
+        //CreateMap<Ingredient, IngredientDto>()
+        //    .ForMember(d => d.Quantity, o => o.MapFrom(s => s.DishIngredients.Select(i => i.Quantity).FirstOrDefault()));
     }
 }
