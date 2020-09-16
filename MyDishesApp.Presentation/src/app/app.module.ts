@@ -5,6 +5,7 @@ import { MatButtonModule, MatDialogModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AboutComponent } from "./about/about.component";
+import { AdminHomeComponent } from "./admin-home/admin-home.component";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app.routing";
 import { DishAddComponent } from "./dishes/dish-add/dish-add.component";
@@ -19,13 +20,14 @@ import { IngredientUpdateComponent } from "./dishes/ingredients/ingredient-updat
 import { IngredientsComponent } from "./dishes/ingredients/ingredients.component";
 import { IngredientService } from "./dishes/ingredients/shared/ingredient.service";
 import { DishService } from "./dishes/shared/dish.service";
-// import { RedirectSilentRenewComponent } from "./redirect-silent-renew/redirect-silent-renew.component";
-// import { AddAuthorizationHeaderInterceptor } from "./shared/add-authorization-header-interceptor";
-import { EnsureAcceptHeaderInterceptor } from "./shared/ensure-accept-header-interceptor";
+import { LoginComponent } from "./login/login.component";
+import { NavMenuComponent } from "./nav-menu/nav-menu.component";
+import { ErrorInterceptorService } from "./services/error-interceptor.service";
+import { HttpInterceptorService } from "./services/http-interceptor.service";
 import { ErrorLoggerService } from "./shared/error-logger.service";
 import { FooterComponent } from "./shared/footer/footer.component";
 import { GlobalErrorHandler } from "./shared/global-error-handler";
-import { HandleHttpErrorInterceptor } from "./shared/handle-http-error-interceptor";
+import { UserHomeComponent } from "./user-home/user-home.component";
 // import { OpenIdConnectService } from './shared/open-id-connect.service';
 // import { RequireAuthenticatedUserRouteGuardService } from "./shared/require-authenticated-user-route-guard.service";
 // import { SigninOidcComponent } from './signin-oidc/signin-oidc.component';
@@ -45,6 +47,10 @@ import { HandleHttpErrorInterceptor } from "./shared/handle-http-error-intercept
     DishDeleteModalComponent,
     IngredientDeleteModalComponent,
     FooterComponent,
+    LoginComponent,
+    UserHomeComponent,
+    AdminHomeComponent,
+    NavMenuComponent,
     // SigninOidcComponent,
     // RedirectSilentRenewComponent,
   ],
@@ -60,21 +66,32 @@ import { HandleHttpErrorInterceptor } from "./shared/handle-http-error-intercept
   ],
   entryComponents: [DishDeleteModalComponent, IngredientDeleteModalComponent],
   providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AddAuthorizationHeaderInterceptor,
-    //   multi: true,
-    // },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: EnsureAcceptHeaderInterceptor,
+      useClass: HttpInterceptorService,
       multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HandleHttpErrorInterceptor,
+      useClass: ErrorInterceptorService,
       multi: true,
     },
+    // providers: [
+    //   // {
+    //   //   provide: HTTP_INTERCEPTORS,
+    //   //   useClass: AddAuthorizationHeaderInterceptor,
+    //   //   multi: true,
+    //   // },
+    //   {
+    //     provide: HTTP_INTERCEPTORS,
+    //     useClass: EnsureAcceptHeaderInterceptor,
+    //     multi: true,
+    //   },
+    //   {
+    //     provide: HTTP_INTERCEPTORS,
+    //     useClass: HandleHttpErrorInterceptor,
+    //     multi: true,
+    //   },
     GlobalErrorHandler,
     ErrorLoggerService,
     DishService,
