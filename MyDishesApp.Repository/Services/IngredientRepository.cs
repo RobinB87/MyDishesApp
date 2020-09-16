@@ -2,6 +2,8 @@
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyDishesApp.Repository.Services
@@ -23,6 +25,12 @@ namespace MyDishesApp.Repository.Services
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
+        }
+
+        // <inheritdoc />
+        public async Task<IEnumerable<Ingredient>> GetIngredients()
+        {
+            return await _context.Ingredients.ToListAsync();
         }
 
         // <inheritdoc />

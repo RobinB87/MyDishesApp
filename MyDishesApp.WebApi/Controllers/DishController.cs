@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using MyDishesApp.Repository.Data.Entities;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -81,7 +79,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// Add a dish to the database
         /// </summary>
         /// <param name="dish">The dish</param>
-        /// <returns></returns>
+        /// <returns>A 201 created when succesful</returns>
         [HttpPost]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
@@ -105,7 +103,6 @@ namespace MyDishesApp.WebApi.Controllers
 
             // Map the dish to an entity
             var dishEntity = _mapper.Map<Dish>(dish);
-            dishEntity.DishIngredients = new List<DishIngredient>();
             foreach (var ingredient in dish.Ingredients)
             {
                 // Check if the ingredient already exists
@@ -149,7 +146,36 @@ namespace MyDishesApp.WebApi.Controllers
                 dishToReturn);
         }
 
+        /// <summary>
+        /// Delete a dish from the database
+        /// </summary>
+        /// <param name="id">The dish id</param>
+        /// <returns>204 when successful</returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteDish(int id)
+        {
+            var dishEntity = await _dishRepository.GetDishAsync(id);
+            if (dishEntity == null)
+            {
+                return NotFound();
+            }
 
+            _dishRepository.DeleteDish(dishEntity);
+
+            // Try to save database
+            try
+            {
+                await _dishRepository.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, "Deleting a dish failed on save.", e);
+                throw;
+            }
+
+            // The response has no body, so therefore a 204 No Content.
+            return NoContent();
+        }
 
 
 
@@ -172,83 +198,6 @@ namespace MyDishesApp.WebApi.Controllers
         //    var dishEntities = await _dishRepository.GetDishesAsync();
         //    var dishes = _mapper.Map<IEnumerable<DishDto>>(dishEntities);
         //    return Ok(dishes);
-        //}
-
-        //[HttpGet("{dishId}", Name = "GetDish")]
-        //[Authorize(Policy = "UserMustBeDishManager")]
-        //[Authorize(Policy = "UserMustBeAdministrator")]
-        //public async Task<ActionResult> GetDish(int dishId)
-        //{
-        //    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
-
-        //    if (dishFromRepo == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    return Ok(_mapper.Map<DishDto>(dishFromRepo));
-        //}
-
-        //[HttpPost]
-        //public async Task<ActionResult> AddDish([FromBody] DishDto dish)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return new UnprocessableEntityObjectResult(ModelState);
-        //    }
-
-        //    if (dish == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var ingredientNames = new List<string>();
-        //    foreach (IngredientDto ingredient in dish.Ingredients)
-        //    {
-        //        ingredientNames.Add(ingredient.Name);
-        //    }
-
-        //    var dishEntity = _mapper.Map<Dish>(dish);
-
-        //    // TODO: add code below
-        //    //if (dishEntity.ManagerId == Guid.Empty)
-        //    //{
-        //    //    if (!Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-        //    //    {
-        //    //        return Forbid();
-        //    //    }
-
-        //    //    dishEntity.ManagerId = userIdAsGuid;
-        //    //}
-
-        //    await _dishRepository.AddDishAsync(dishEntity);
-
-        //    try
-        //    {
-        //        await _dishRepository.SaveAsync();
-        //    }
-        //    catch (DbUpdateException dbEx)
-        //    {
-        //        SqlException sqlException = dbEx.InnerException as SqlException;
-        //        if (sqlException?.Number == 2601)
-        //        {
-        //            // log dbEx
-        //            ModelState.AddModelError("UniqueDishName", "UniqueDishName|Dishname already exists. Please provide a different name.");
-        //            return new UnprocessableEntityObjectResult(ModelState);
-        //        }
-        //        throw new Exception("Adding a dish failed on save");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.Log(LogLevel.Error, "Adding a dish failed on save", ex);
-        //        throw;
-        //    }
-
-        //    var dishToReturn = _mapper.Map<DishDto>(dishEntity);
-
-        //    return CreatedAtRoute("GetDish",
-        //        new { dishId = dishToReturn.DishId },
-        //        dishToReturn);
         //}
 
         //[HttpPatch("{dishId}")]
@@ -287,32 +236,6 @@ namespace MyDishesApp.WebApi.Controllers
         //        throw new Exception("Updating a dish failed on save.");
         //    }
 
-        //    return NoContent();
-        //}
-
-        //// Delete dish
-        //[HttpDelete("{dishId}")]
-        //public async Task<ActionResult> DeleteDish(int dishId)
-        //{
-        //    // Check if dish exists.
-        //    if (!await _dishRepository.DishExists(dishId))
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // If dish (entity) exists, get it and then remove it.
-        //    var dishEntity = await _dishRepository.GetDishAsync(dishId);
-        //    _dishRepository.DeleteDish(dishEntity);
-
-        //    // Try to save database
-        //    if (!await _dishRepository.SaveAsync())
-        //    {
-        //        throw new Exception("Deleting a dish failed on save.");
-        //    }
-
-        //    // TODO: add mailservice which sends an e-mail that the dish is deleted.
-
-        //    // The response has no body, so therefore a 202 No Content.
         //    return NoContent();
         //}
     }

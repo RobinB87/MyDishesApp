@@ -21,6 +21,6 @@ namespace MyDishesApp.Repository.Data.Entities
         [Required]
         public string Recipe { get; set; }
 
-        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
+        public virtual ICollection<DishIngredient> DishIngredients { get; } = new List<DishIngredient>();
     }
 }

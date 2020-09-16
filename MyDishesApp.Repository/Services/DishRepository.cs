@@ -53,10 +53,11 @@ namespace MyDishesApp.Repository.Services
             await _context.Dishes.AddAsync(dish);
         }
 
-        //public void DeleteDish(Dish dish)
-        //{
-        //    _context.Dishes.Remove(dish);
-        //}
+        // <inheritdoc />
+        public void DeleteDish(Dish dish)
+        {
+            _context.Dishes.Remove(dish);
+        }
 
         /// <inheritdoc />
         public async Task<bool> SaveAsync()
