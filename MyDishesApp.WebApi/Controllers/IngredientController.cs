@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MyDishesApp.WebApi.Dtos;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -11,9 +15,9 @@ namespace MyDishesApp.WebApi.Controllers
     /// The ingredient controller
     /// </summary>
     [Produces("application/json")]
-    [Route("api/dishes/{dishId}/ingredients")]
+    [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class IngredientController : Controller
     {
         private readonly IMapper _mapper;
@@ -38,6 +42,19 @@ namespace MyDishesApp.WebApi.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
             _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
+        }
+
+        /// <summary>
+        /// Get all ingredients
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        //[Authorize(Policy = Policies.Admin)]
+        //[Authorize(Policy = Policies.User)]
+        public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients()
+        {
+            var ingredientEntities = await _ingredientRepository.GetIngredients();
+            return _mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities).ToList();
         }
 
         //// Get

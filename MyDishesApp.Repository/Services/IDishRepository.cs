@@ -32,7 +32,11 @@ namespace MyDishesApp.Repository.Services
         /// <param name="dish">The dish</param>
         Task AddDishAsync(Dish dish);
 
-        //void DeleteDish(Dish dish);
+        /// <summary>
+        /// Delete a dish from the database
+        /// </summary>
+        /// <param name="dish">The dish</param>
+        void DeleteDish(Dish dish);
 
         /// <summary>
         /// Method for saving the context

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MyDishesApp.Repository.Data.Entities;
 
 namespace MyDishesApp.Repository.Services
@@ -8,6 +9,11 @@ namespace MyDishesApp.Repository.Services
     /// </summary>
     public interface IIngredientRepository
     {
+        /// <summary>
+        /// Get all ingredients
+        /// </summary>
+        Task<IEnumerable<Ingredient>> GetIngredients();
+
         /// <summary>
         /// Gets an engredient by name
         /// </summary>
