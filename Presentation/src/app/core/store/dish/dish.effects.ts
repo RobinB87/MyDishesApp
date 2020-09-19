@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Dish } from '../../models';
+import { Dish } from '../../models/dish';
 import { DishService } from '../../services/dish.service';
 import { IAppState } from '../app.state';
 import {

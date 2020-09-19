@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { IAppState } from '../../core/store/app.state';
-import { GetDish } from '../../core/store/dish/dish.actions';
-import { selectSelectedDish } from '../../core/store/dish/dish.selectors';
+import { IAppState } from '../../../core/store';
+import { GetDish, selectSelectedDish } from '../../../core/store/dish';
 
 /** The dish detail component */
 @Component({

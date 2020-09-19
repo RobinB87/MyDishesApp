@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Dish } from '../../core/models';
-import { DishAdd } from '../../core/store/dish/dish.actions';
+import { Dish } from '../../../core/models/dish';
 
 /* The dish add component */
 @Component({
@@ -17,9 +16,9 @@ export class DishAddComponent {
     this.dishes = store.pipe(select('dishes'));
   }
 
-  AddDish(dishName: string) {
-    const dish = new Dish();
-    dish.name = dishName;
-    this.store.dispatch(new DishAdd(dish));
-  }
+  // AddDish(dishName: string) {
+  //   const dish = new Dish();
+  //   dish.name = dishName;
+  //   this.store.dispatch(new DishAdd(dish));
+  // }
 }

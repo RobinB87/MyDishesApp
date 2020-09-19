@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Dish } from '../../models';
+import { Dish } from '../../models/dish';
 
 export enum EDishActions {
   GetDishes = '[Dish] Get Dishes',
@@ -12,10 +12,10 @@ export enum EDishActions {
   Remove = '[Dish] Remove',
 }
 
-export class ActionEx implements Action {
-  readonly type;
-  payload: any;
-}
+// export class ActionEx implements Action {
+//   readonly type;
+//   payload: any;
+// }
 
 export class GetDishes implements Action {
   public readonly type = EDishActions.GetDishes;
@@ -36,20 +36,20 @@ export class GetDishSuccess implements Action {
   constructor(public payload: Dish) {}
 }
 
-export class DishAdd implements ActionEx {
-  readonly type = EDishActions.Add;
-  constructor(public payload: any) {}
-}
+// export class DishAdd implements ActionEx {
+//   readonly type = EDishActions.Add;
+//   constructor(public payload: any) {}
+// }
 
-export class DishRemove implements ActionEx {
-  readonly type = EDishActions.Remove;
-  constructor(public payload: any) {}
-}
+// export class DishRemove implements ActionEx {
+//   readonly type = EDishActions.Remove;
+//   constructor(public payload: any) {}
+// }
 
 export type DishActions =
   | GetDishes
   | GetDishesSuccess
   | GetDish
-  | GetDishSuccess
-  | DishAdd
-  | DishRemove;
+  | GetDishSuccess;
+// | DishAdd
+// | DishRemove;

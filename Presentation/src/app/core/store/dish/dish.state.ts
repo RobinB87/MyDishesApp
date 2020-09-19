@@ -1,4 +1,4 @@
-import { Dish } from '../../models';
+import { Dish } from '../../models/dish';
 
 export interface IDishState {
   dishes: Dish[];

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LogInComponent } from './auth/log-in/log-in.component';
-import { SignUpComponent } from './auth/sign-up/sign-up.component';
-import { DishDetailComponent } from './dish/dish-detail/dish-detail.component';
-import { DishListComponent } from './dish/dish-list';
+import { LogInComponent } from './components/auth/log-in';
+import { SignUpComponent } from './components/auth/sign-up';
+import { DishDetailComponent } from './components/dish/dish-detail';
+import { DishListComponent } from './components/dish/dish-list';
 
 const routes: Routes = [
   { path: 'log-in', component: LogInComponent },
