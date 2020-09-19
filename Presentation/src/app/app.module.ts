@@ -18,6 +18,7 @@ import { AuthService, DishService } from './core/services';
 import { appReducers } from './core/store';
 import { AuthEffects } from './core/store/auth';
 import { DishEffects } from './core/store/dish';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { DishEffects } from './core/store/dish';
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     AppRoutingModule,
+    NgbModule,
   ],
   providers: [AuthService, DishService],
   bootstrap: [AppComponent],
