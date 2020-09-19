@@ -17,6 +17,12 @@ import { selectDishList } from './dish.selectors';
 
 @Injectable()
 export class DishEffects {
+  constructor(
+    private dishService: DishService,
+    private actions$: Actions,
+    private store: Store<IAppState>
+  ) {}
+
   @Effect()
   getDishes$ = this.actions$.pipe(
     ofType<GetDishes>(EDishActions.GetDishes),
@@ -34,10 +40,4 @@ export class DishEffects {
       return of(new GetDishSuccess(selectedDish));
     })
   );
-
-  constructor(
-    private dishService: DishService,
-    private actions$: Actions,
-    private store: Store<IAppState>
-  ) {}
 }

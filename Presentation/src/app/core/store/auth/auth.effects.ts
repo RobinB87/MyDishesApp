@@ -24,16 +24,11 @@ export class AuthEffects {
     ofType(EAuthActionTypes.LOGIN),
     map((action: LogIn) => action.payload),
     switchMap((payload) => {
-      return (
-        this.authService.logIn(payload.email, payload.password).pipe(
-          map((user) => {
-            console.log(user);
-            return new LogInSuccess({
-              token: user.token,
-              email: payload.email,
-            });
-          })
-        ),
+      return this.authService.logIn(payload.email, payload.password).pipe(
+        map((user) => {
+          console.log(user);
+          return new LogInSuccess({ token: user.token, email: payload.email });
+        }),
         catchError((error) => {
           console.log(error);
           return of(new LogInFailure({ error: error }));
