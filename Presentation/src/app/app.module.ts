@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
@@ -8,12 +9,16 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DishService } from './core/services/dish.service';
-import { appReducers } from './core/store/app.reducers';
-import { DishEffects } from './core/store/dish/dish.effects';
-import { DishAddComponent } from './dish/dish-add';
-import { DishDetailComponent } from './dish/dish-detail/dish-detail.component';
-import { DishListComponent } from './dish/dish-list';
+import { LogInComponent } from './components/auth/log-in';
+import { SignUpComponent } from './components/auth/sign-up';
+import { DishAddComponent } from './components/dish/dish-add';
+import { DishDetailComponent } from './components/dish/dish-detail';
+import { DishListComponent } from './components/dish/dish-list';
+import { AuthService, DishService } from './core/services';
+import { appReducers } from './core/store';
+import { AuthEffects } from './core/store/auth';
+import { DishEffects } from './core/store/dish';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -21,17 +26,21 @@ import { DishListComponent } from './dish/dish-list';
     DishListComponent,
     DishAddComponent,
     DishDetailComponent,
+    SignUpComponent,
+    LogInComponent,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     StoreModule.forRoot(appReducers),
-    EffectsModule.forRoot([DishEffects]),
+    EffectsModule.forRoot([AuthEffects, DishEffects]),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     AppRoutingModule,
+    NgbModule,
   ],
-  providers: [DishService],
+  providers: [AuthService, DishService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
