@@ -2,6 +2,7 @@
 using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.WebApi.Dtos;
 using System.Linq;
+using MyDishesApp.Repository.Data.Entities.Auth;
 
 namespace MyDishesApp.WebApi
 {
@@ -27,6 +28,8 @@ namespace MyDishesApp.WebApi
 
             CreateMap<Ingredient, IngredientDto>()
                 .ForMember(d => d.Quantity, o => o.MapFrom(s => s.DishIngredients.Select(i => i.Quantity).FirstOrDefault()));
+
+            CreateMap<User, Dtos.Auth.User>();
         }
     }
 }

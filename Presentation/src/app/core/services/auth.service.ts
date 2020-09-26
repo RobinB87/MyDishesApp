@@ -6,7 +6,7 @@ import { User } from '../models/auth';
 
 @Injectable()
 export class AuthService {
-  apiUrl = environment.fakeBackendUrl;
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -22,5 +22,10 @@ export class AuthService {
   signUp(email: string, password: string): Observable<User> {
     const url = `${this.apiUrl}/register`;
     return this.http.post<User>(url, { email, password });
+  }
+
+  getStatus(): Observable<User> {
+    const url = `${this.apiUrl}/login/status`;
+    return this.http.get<User>(url);
   }
 }

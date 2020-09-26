@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MyDishesApp.Repository.Data.Entities;
 using System.Collections.Generic;
-using MyDishesApp.Repository.Data.Entities;
 using System.Linq;
+using MyDishesApp.Repository.Data.Entities.Auth;
 
 namespace MyDishesApp.Repository.Data
 {
@@ -9,6 +9,36 @@ namespace MyDishesApp.Repository.Data
     {
         public static void EnsureSeedDataForContext(this DishesContext context)
         {
+            // Check if data is present in users db
+            if (!context.Users.Any())
+            {
+                var users = new List<User>
+                {
+                    new User
+                    {
+                        FirstName = "Robin",
+                        Password = "1234",
+                        Email = "rob@rob.com",
+                        LastName = "Robin",
+                        PasswordSalt = "salty#saerqeegxxXEGlt!@#saltttt!$(@$*@$*@$*",
+                        Role = "Admin"
+                    },
+                    new User
+                    {
+                        FirstName = "TestUser",
+                        Password = "1234",
+                        Email = "test@test.com",
+                        LastName = "TestUser",
+                        PasswordSalt = "sal12312312456ZZxswraty#salt!@#sa124124ltttt!$(@$*@$*@$*",
+                        Role = "User"
+                    }
+                };
+
+                context.Users.AddRange(users);
+                context.SaveChanges();
+            }
+
+
             // Check if this data is already in db
             if (context.Dishes.Any())
             {

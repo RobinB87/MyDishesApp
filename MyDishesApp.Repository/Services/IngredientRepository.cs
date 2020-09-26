@@ -15,7 +15,7 @@ namespace MyDishesApp.Repository.Services
         private readonly IDishRepository _dishRepository;
 
         /// <summary>
-        /// Constructor with the dishes context
+        /// Initializes a new instance of <see cref="IngredientRepository" />
         /// </summary>
         /// <param name="context">The dishes context</param>
         /// <param name="dishRepository">The dish repository context</param>

@@ -82,6 +82,7 @@ namespace MyDishesApp.WebApi
             // Register the repositories
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
