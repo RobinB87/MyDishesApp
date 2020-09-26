@@ -3,6 +3,13 @@
     <h1>Log in</h1>
     <hr />
     <br />
+
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+    </div>
+
     <form (ngSubmit)="onSubmit()" ngNativeValidate>
       <div class="form-group">
         <label for="email">Email</label>
@@ -31,6 +38,7 @@
       <button type="submit" class="btn btn-primary">Submit</button>
       <a [routerLink]="['/']" class="btn btn-success">Cancel</a>
     </form>
+
     <p>
       <span>Don't have an account?&nbsp;</span>
       <a [routerLink]="['/sign-up']">Sign up!</a>

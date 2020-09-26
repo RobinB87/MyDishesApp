@@ -5,8 +5,17 @@
     <h1>Angular + NGRX</h1>
     <hr />
     <br />
-    <a [routerLink]="['/log-in']" class="btn btn-primary">Log in</a>
-    <a [routerLink]="['/sign-up']" class="btn btn-primary">Sign up</a>
+    <div *ngIf="isAuthenticated; then doSomething; else doSomethingElse"></div>
+    <ng-template #doSomething>
+      <p>
+        You logged in <em>{{ user.email }}!</em>
+      </p>
+      <!-- <button class="btn btn-primary" (click)="logOut()">Log out</button> -->
+    </ng-template>
+    <ng-template #doSomethingElse>
+      <a [routerLink]="['/log-in']" class="btn btn-primary">Log in</a>
+      <a [routerLink]="['/sign-up']" class="btn btn-primary">Sign up</a>
+    </ng-template>
   </div>
 </div>
 

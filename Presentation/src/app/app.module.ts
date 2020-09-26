@@ -1,7 +1,8 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
@@ -15,10 +16,10 @@ import { DishAddComponent } from './components/dish/dish-add';
 import { DishDetailComponent } from './components/dish/dish-detail';
 import { DishListComponent } from './components/dish/dish-list';
 import { AuthService, DishService } from './core/services';
+import { TokenInterceptor } from './core/services/token.interceptor';
 import { appReducers } from './core/store';
 import { AuthEffects } from './core/store/auth';
 import { DishEffects } from './core/store/dish';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     NgbModule,
   ],
-  providers: [AuthService, DishService],
+  providers: [
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+    DishService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
