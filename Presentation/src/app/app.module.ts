@@ -16,10 +16,14 @@ import { DishAddComponent } from './components/dish/dish-add';
 import { DishDetailComponent } from './components/dish/dish-detail';
 import { DishListComponent } from './components/dish/dish-list';
 import { AuthService, DishService } from './core/services';
-import { TokenInterceptor } from './core/services/token.interceptor';
+import {
+  ErrorInterceptor,
+  TokenInterceptor,
+} from './core/services/token.interceptor';
 import { appReducers } from './core/store';
 import { AuthEffects } from './core/store/auth';
 import { DishEffects } from './core/store/dish';
+import { StatusComponent } from './components/status/status.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +33,7 @@ import { DishEffects } from './core/store/dish';
     DishDetailComponent,
     SignUpComponent,
     LogInComponent,
+    StatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +51,11 @@ import { DishEffects } from './core/store/dish';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true,
     },
     DishService,

@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using MyDishesApp.WebApi.Dtos.Auth;
 
 namespace MyDishesApp.WebApi.Controllers
@@ -70,6 +71,17 @@ namespace MyDishesApp.WebApi.Controllers
             }
 
             return response;
+        }
+
+        /// <summary>
+        /// Temp method... TODO: Remove
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("status")]
+        [Authorize(Policy = Policies.User)]
+        public ActionResult Status()
+        {
+            return Ok();
         }
 
         /// <summary>

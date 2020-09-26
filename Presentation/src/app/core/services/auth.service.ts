@@ -23,4 +23,9 @@ export class AuthService {
     const url = `${this.apiUrl}/register`;
     return this.http.post<User>(url, { email, password });
   }
+
+  getStatus(): Observable<User> {
+    const url = `${this.apiUrl}/login/status`;
+    return this.http.get<User>(url);
+  }
 }

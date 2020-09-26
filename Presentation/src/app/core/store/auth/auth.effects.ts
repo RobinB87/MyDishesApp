@@ -6,6 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import {
   EAuthActionTypes,
+  GetStatus,
   LogIn,
   LogInFailure,
   LogInSuccess,
@@ -50,4 +51,21 @@ export class AuthEffects {
   LogInFailure: Observable<any> = this.actions$.pipe(
     ofType(EAuthActionTypes.LOGIN_FAILURE)
   );
+
+  @Effect({ dispatch: false })
+  GetStatus: Observable<any> = this.actions$.pipe(
+    ofType(EAuthActionTypes.GET_STATUS),
+    map((action: GetStatus) => action),
+    switchMap((payload) => {
+      return this.authService.getStatus();
+    })
+  );
+
+  // @Effect({ dispatch: false })
+  // GetStatus: Observable<any> = this.actions$.pipe(
+  //   ofType(EAuthActionTypes.GET_STATUS),
+  //   switchMap((payload) => {
+  //     return this.authService.getStatus();
+  //   })
+  // );
 }

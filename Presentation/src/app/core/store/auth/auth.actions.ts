@@ -4,6 +4,8 @@ export enum EAuthActionTypes {
   LOGIN = '[Auth] Login',
   LOGIN_SUCCESS = '[Auth] Login Success',
   LOGIN_FAILURE = '[Auth] Login Failure',
+
+  GET_STATUS = '[Auth] GetStatus',
 }
 
 export class LogIn implements Action {
@@ -21,4 +23,8 @@ export class LogInFailure implements Action {
   constructor(public payload: any) {}
 }
 
-export type All = LogIn | LogInSuccess | LogInFailure;
+export class GetStatus implements Action {
+  readonly type = EAuthActionTypes.GET_STATUS;
+}
+
+export type All = LogIn | LogInSuccess | LogInFailure | GetStatus;
