@@ -6,7 +6,7 @@ import { User } from '../models/auth';
 
 @Injectable()
 export class AuthService {
-  apiUrl = environment.fakeBackendUrl;
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

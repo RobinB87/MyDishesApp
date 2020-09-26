@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using MyDishesApp.WebApi.Authorization;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -17,7 +19,7 @@ namespace MyDishesApp.WebApi.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class DishController : Controller
     {
         private readonly IMapper _mapper;
@@ -49,7 +51,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <returns>A list of dishes</returns>
         [HttpGet]
-        //[Authorize(Policy = Policies.Admin)]
+        [Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
         {

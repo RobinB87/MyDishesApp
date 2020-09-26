@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data.Entities;
+using MyDishesApp.Repository.Data.Entities.Auth;
 
 namespace MyDishesApp.Repository.Data
 {
@@ -16,6 +17,7 @@ namespace MyDishesApp.Repository.Data
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<DishIngredient> DishIngredients { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +39,10 @@ namespace MyDishesApp.Repository.Data
                 .HasOne(di => di.Ingredient)
                 .WithMany(i => i.DishIngredients)
                 .HasForeignKey(di => di.IngredientId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(d => d.Email)
+                .IsUnique();
         }
     }
 }

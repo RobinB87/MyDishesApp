@@ -13,7 +13,7 @@ namespace MyDishesApp.Repository.Services
         private readonly DishesContext _context;
 
         /// <summary>
-        /// Constructor with the dishes context
+        /// Initializes a new instance of <see cref="DishRepository" />
         /// </summary>
         /// <param name="context">The dishes context</param>
         /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="context"/> is null</exception>
