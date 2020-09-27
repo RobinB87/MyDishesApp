@@ -5,12 +5,17 @@ import { SignUpComponent } from './components/auth/sign-up';
 import { DishDetailComponent } from './components/dish/dish-detail';
 import { DishListComponent } from './components/dish/dish-list';
 import { StatusComponent } from './components/status/status.component';
+import { AuthGuardService as AuthGuard } from './core/services/auth';
 
 const routes: Routes = [
   { path: 'log-in', component: LogInComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'status', component: StatusComponent },
-  { path: 'dishes', component: DishListComponent },
+  {
+    path: 'status',
+    component: StatusComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'dishes', component: DishListComponent, canActivate: [AuthGuard] },
   { path: 'dish/:dishId', component: DishDetailComponent },
   { path: '', redirectTo: '/dishes', pathMatch: 'full' },
 ];
