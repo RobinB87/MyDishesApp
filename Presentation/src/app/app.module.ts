@@ -15,15 +15,16 @@ import { SignUpComponent } from './components/auth/sign-up';
 import { DishAddComponent } from './components/dish/dish-add';
 import { DishDetailComponent } from './components/dish/dish-detail';
 import { DishListComponent } from './components/dish/dish-list';
-import { AuthService, DishService } from './core/services';
+import { StatusComponent } from './components/status';
 import {
+  AuthService,
+  DishService,
   ErrorInterceptor,
   TokenInterceptor,
-} from './core/services/token.interceptor';
+} from './core/services';
 import { appReducers } from './core/store';
 import { AuthEffects } from './core/store/auth';
 import { DishEffects } from './core/store/dish';
-import { StatusComponent } from './components/status/status.component';
 
 @NgModule({
   declarations: [

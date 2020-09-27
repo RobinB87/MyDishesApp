@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IAppState, selectAuthState } from '../../../core/store';
+import { LogOut } from '../../../core/store/auth';
 import { GetDishes, selectDishList } from '../../../core/store/dish';
 
 /* The dish list component */
@@ -31,6 +32,10 @@ export class DishListComponent implements OnInit {
     });
 
     this.store.dispatch(new GetDishes());
+  }
+
+  logOut(): void {
+    this.store.dispatch(new LogOut());
   }
 
   navigateToDish(dishId: number) {

@@ -10,7 +10,7 @@
       <p>
         You logged in <em>{{ user.email }}!</em>
       </p>
-      <!-- <button class="btn btn-primary" (click)="logOut()">Log out</button> -->
+      <button class="btn btn-primary" (click)="logOut()">Log out</button>
     </ng-template>
     <ng-template #doSomethingElse>
       <a [routerLink]="['/log-in']" class="btn btn-primary">Log in</a>
@@ -36,7 +36,7 @@
 
 <div class="panel-body">
   <div class="table-responsive">
-    <table class="table" *ngIf="dishes$">
+    <table class="table" *ngIf="isAuthenticated && dishes$">
       <thead>
         <tr>
           <th>Name</th>
