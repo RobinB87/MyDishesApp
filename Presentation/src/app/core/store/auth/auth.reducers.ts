@@ -35,6 +35,9 @@ export function authReducers(state = initialAuthState, action: All): State {
         errorMessage: 'Incorrect email and/or password.',
       };
     }
+    case EAuthActionTypes.LOGOUT: {
+      return initialAuthState;
+    }
     default: {
       return state;
     }

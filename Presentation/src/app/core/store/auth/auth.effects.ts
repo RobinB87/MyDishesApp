@@ -20,6 +20,7 @@ export class AuthEffects {
     private router: Router
   ) {}
 
+  /** Login effects */
   @Effect()
   LogIn: Observable<any> = this.actions$.pipe(
     ofType(EAuthActionTypes.LOGIN),
@@ -52,6 +53,16 @@ export class AuthEffects {
     ofType(EAuthActionTypes.LOGIN_FAILURE)
   );
 
+  /** Logout effects */
+  @Effect({ dispatch: false })
+  public LogOut: Observable<any> = this.actions$.pipe(
+    ofType(EAuthActionTypes.LOGOUT),
+    tap((user) => {
+      localStorage.removeItem('token');
+    })
+  );
+
+  /** Get status effects */
   @Effect({ dispatch: false })
   GetStatus: Observable<any> = this.actions$.pipe(
     ofType(EAuthActionTypes.GET_STATUS),
@@ -60,12 +71,4 @@ export class AuthEffects {
       return this.authService.getStatus();
     })
   );
-
-  // @Effect({ dispatch: false })
-  // GetStatus: Observable<any> = this.actions$.pipe(
-  //   ofType(EAuthActionTypes.GET_STATUS),
-  //   switchMap((payload) => {
-  //     return this.authService.getStatus();
-  //   })
-  // );
 }
