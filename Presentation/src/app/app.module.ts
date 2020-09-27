@@ -16,12 +16,13 @@ import { DishAddComponent } from './components/dish/dish-add';
 import { DishDetailComponent } from './components/dish/dish-detail';
 import { DishListComponent } from './components/dish/dish-list';
 import { StatusComponent } from './components/status';
+import { DishService } from './core/services';
 import {
+  AuthGuardService as AuthGuard,
   AuthService,
-  DishService,
   ErrorInterceptor,
   TokenInterceptor,
-} from './core/services';
+} from './core/services/auth';
 import { appReducers } from './core/store';
 import { AuthEffects } from './core/store/auth';
 import { DishEffects } from './core/store/dish';
@@ -48,6 +49,7 @@ import { DishEffects } from './core/store/dish';
     NgbModule,
   ],
   providers: [
+    AuthGuard,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,
