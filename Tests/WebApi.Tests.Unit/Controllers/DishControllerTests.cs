@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MyDishesApp.Repository.Data.Entities;
@@ -77,45 +78,132 @@ namespace WebApi.Tests.Unit.Controllers
             }
         }
 
-        //public class GetDishById : DishControllerTestBase
-        //{
-        //    private const string Input = "Death Atlas";
+        public class GetDish : DishControllerTestBase
+        {
+            private const string Input = "Pizza";
 
-        //    [Fact]
-        //    public async Task CallsServiceCorrectly()
-        //    {
-        //        // Arrange
-        //        var serviceResponse = new Dish { Name = Input };
-        //        var mappedResult = new DishDto { Name = Input };
+            [Fact]
+            public async Task CallsServiceCorrectly()
+            {
+                // Arrange
+                var serviceResponse = new Dish { Name = Input };
+                var mappedResult = new DishDto { Name = Input };
 
-        //        DishRepositoryMock
-        //            .Setup(s => s.GetDishAsync(3))
-        //            .ReturnsAsync(serviceResponse)
-        //            .Verifiable();
+                DishRepositoryMock
+                    .Setup(s => s.GetDishAsync(3))
+                    .ReturnsAsync(serviceResponse)
+                    .Verifiable();
 
-        //        MapperMock
-        //            .Setup(m => m.Map<DishDto>(serviceResponse))
-        //            .Returns(mappedResult)
-        //            .Verifiable();
+                MapperMock
+                    .Setup(m => m.Map<DishDto>(serviceResponse))
+                    .Returns(mappedResult)
+                    .Verifiable();
 
-        //        var sut = CreateController();
+                var sut = CreateController();
 
-        //        // Act
-        //        var result = await sut.GetDishById(3);
+                // Act
+                var result = await sut.GetDish(3);
 
-        //        // Assert
-        //        VerifyMocks();
-        //        Assert.NotNull(result);
-        //        Assert.Equal(mappedResult, result.Value);
-        //    }
+                // Assert
+                VerifyMocks();
+                Assert.NotNull(result);
+                Assert.Equal(mappedResult, result.Value);
+            }
 
-        //    [Fact]
-        //    public void LogsAndRethrowsException()
-        //    {
-        //        var sut = CreateController();
-        //        Assert.ThrowsAsync<Exception>(() => sut.GetDishById(3));
-        //    }
-        //}
+            [Fact]
+            public void LogsAndRethrowsException()
+            {
+                var sut = CreateController();
+                Assert.ThrowsAsync<Exception>(() => sut.GetDish(3));
+            }
+        }
+
+        public class AddDish : DishControllerTestBase
+        {
+            [Fact]
+            public async Task CallsServiceCorrectly()
+            {
+                // Arrange
+                var ingredientToAdd = new IngredientDto {Name = "Ansjovis"};
+                var dishToAdd = new DishDto
+                {
+                    Name = "Pizza",
+                    Country = "Italy",
+                    Ingredients = new[]
+                    {
+                        ingredientToAdd
+                    }
+                };
+
+                var mappedIngredient = new Ingredient {Name = "Ansjovis"};
+                var mappedDish = new Dish
+                {
+                    Name = "Pizza",
+                    Country = "Italy",
+                    DishIngredients =
+                    {
+                        new DishIngredient
+                        {
+                            Ingredient = mappedIngredient
+                        }
+                    }
+                };
+
+                DishRepositoryMock
+                    .Setup(s => s.DishExists(dishToAdd.Name))
+                    .ReturnsAsync(false)
+                    .Verifiable();
+
+                MapperMock
+                    .Setup(m => m.Map<Dish>(dishToAdd))
+                    .Returns(mappedDish)
+                    .Verifiable();
+
+                IngredientRepositoryMock
+                    .Setup(s => s.GetIngredientAsync(ingredientToAdd.Name))
+                    .ReturnsAsync(mappedIngredient)
+                    .Verifiable();
+
+                DishRepositoryMock
+                    .Setup(s => s.AddDishAsync(mappedDish))
+                    .Returns(Task.CompletedTask)
+                    .Verifiable();
+
+                MapperMock
+                    .Setup(m => m.Map<DishDto>(mappedDish))
+                    .Returns(dishToAdd)
+                    .Verifiable();
+
+                var sut = CreateController();
+
+                // Act
+                var result = await sut.AddDish(dishToAdd);
+
+                // Assert
+                VerifyMocks();
+                Assert.IsType<CreatedAtRouteResult>(result);
+            }
+
+            [Fact]
+            public void ReturnsUnprocessableEntityObjectResultWhenDishAlreadyExists()
+            {
+                DishRepositoryMock
+                    .Setup(s => s.DishExists("Pizza"))
+                    .ReturnsAsync(true)
+                    .Verifiable();
+
+                var sut = CreateController();
+                var result = sut.AddDish(new DishDto { Name = "Pizza" });
+                Assert.IsType<UnprocessableEntityObjectResult>(result.Result);
+            }
+
+            [Fact]
+            public void LogsAndRethrowsException()
+            {
+                var sut = CreateController();
+                Assert.ThrowsAsync<Exception>(() => sut.AddDish(new DishDto()));
+            }
+        }
 
         //public class GetDishByName : DishControllerTestBase
         //{
@@ -233,48 +321,7 @@ namespace WebApi.Tests.Unit.Controllers
         //    }
         //}
 
-        //public class AddDish : DishControllerTestBase
-        //{
-        //    [Fact]
-        //    public async Task CallsServiceCorrectly()
-        //    {
-        //        // Arrange
-        //        var songToAdd = new DishDto { Name = "Bottom", Album = "Undertow", Artist = "Tool" };
-        //        var mappedDish = new Dish { Name = "Bottom", Album = "Undertow", Artist = new Artist { Name = "Tool" } };
 
-        //        MapperMock
-        //            .Setup(m => m.Map<Dish>(songToAdd))
-        //            .Returns(mappedDish)
-        //            .Verifiable();
-
-        //        DishRepositoryMock
-        //            .Setup(s => s.AddDishAsync(mappedDish))
-        //            .Returns(Task.CompletedTask)
-        //            .Verifiable();
-
-        //        var sut = CreateController();
-
-        //        // Act
-        //        var result = await sut.AddDish(songToAdd);
-
-        //        // Assert
-        //        VerifyMocks();
-        //        Assert.IsType<NoContentResult>(result);
-        //    }
-
-        //    [Fact]
-        //    public void ReturnsUnprocessableEntityObjectResultWhenDishAlreadyExists()
-        //    {
-        //        DishRepositoryMock
-        //            .Setup(s => s.DishExists("Rocky Mountain Way", "Joe Walsh"))
-        //            .ReturnsAsync(true)
-        //            .Verifiable();
-
-        //        var sut = CreateController();
-        //        var result = sut.AddDish(new DishDto { Name = "Rocky Mountain Way", Artist = "Joe Walsh" });
-        //        Assert.IsType<UnprocessableEntityObjectResult>(result.Result);
-        //    }
-        //}
 
         //public class EditDish : DishControllerTestBase
         //{
@@ -282,11 +329,11 @@ namespace WebApi.Tests.Unit.Controllers
         //    public async Task CallsServiceCorrectly()
         //    {
         //        // Arrange
-        //        var songToEdit = new DishDto { Name = "Bottom", Album = "Undertow", Artist = "Tool", DishId = 5 };
+        //        var dishToEdit = new DishDto { Name = "Bottom", Album = "Undertow", Artist = "Tool", DishId = 5 };
         //        var mappedDish = new Dish { Name = "Bottom", Album = "Undertow", Id = 5, Artist = new Artist { Name = "Tool" } };
 
         //        MapperMock
-        //            .Setup(m => m.Map<Dish>(songToEdit))
+        //            .Setup(m => m.Map<Dish>(dishToEdit))
         //            .Returns(mappedDish)
         //            .Verifiable();
 
@@ -298,7 +345,7 @@ namespace WebApi.Tests.Unit.Controllers
         //        var sut = CreateController();
 
         //        // Act
-        //        var result = await sut.EditDish(5, songToEdit);
+        //        var result = await sut.EditDish(5, dishToEdit);
 
         //        // Assert
         //        VerifyMocks();
@@ -320,15 +367,15 @@ namespace WebApi.Tests.Unit.Controllers
         //    public async Task CallsServiceCorrectly()
         //    {
         //        // Arrange
-        //        var songToDelete = new Dish { Name = "Bottom", Album = "Undertow", Id = 5, Artist = new Artist { Name = "Tool" } };
+        //        var dishToDelete = new Dish { Name = "Bottom", Album = "Undertow", Id = 5, Artist = new Artist { Name = "Tool" } };
 
         //        DishRepositoryMock
         //            .Setup(s => s.GetDishAsync(3))
-        //            .ReturnsAsync(songToDelete)
+        //            .ReturnsAsync(dishToDelete)
         //            .Verifiable();
 
         //        DishRepositoryMock
-        //            .Setup(s => s.DeleteDishAsync(songToDelete))
+        //            .Setup(s => s.DeleteDishAsync(dishToDelete))
         //            .Returns(Task.CompletedTask)
         //            .Verifiable();
 
