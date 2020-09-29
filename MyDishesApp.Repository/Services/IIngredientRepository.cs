@@ -12,13 +12,13 @@ namespace MyDishesApp.Repository.Services
         /// <summary>
         /// Get all ingredients
         /// </summary>
-        Task<IEnumerable<Ingredient>> GetIngredients();
+        Task<IEnumerable<Ingredient>> GetIngredientsAsync();
 
         /// <summary>
         /// Gets an engredient by name
         /// </summary>
         /// <param name="name">The ingredient name</param>
-        Task<Ingredient> GetIngredient(string name);
+        Task<Ingredient> GetIngredientAsync(string name);
 
         ///// <summary>
         ///// Add an ingredient to the database

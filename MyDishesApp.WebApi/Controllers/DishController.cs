@@ -108,7 +108,7 @@ namespace MyDishesApp.WebApi.Controllers
             foreach (var ingredient in dish.Ingredients)
             {
                 // Check if the ingredient already exists
-                var ingredientEntity = await _ingredientRepository.GetIngredient(ingredient.Name);
+                var ingredientEntity = await _ingredientRepository.GetIngredientAsync(ingredient.Name);
                 if (ingredientEntity == null)
                 {
                     ingredientEntity = _mapper.Map<Ingredient>(ingredient);

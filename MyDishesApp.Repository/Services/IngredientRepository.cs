@@ -28,13 +28,13 @@ namespace MyDishesApp.Repository.Services
         }
 
         // <inheritdoc />
-        public async Task<IEnumerable<Ingredient>> GetIngredients()
+        public async Task<IEnumerable<Ingredient>> GetIngredientsAsync()
         {
             return await _context.Ingredients.ToListAsync();
         }
 
         // <inheritdoc />
-        public async Task<Ingredient> GetIngredient(string name)
+        public async Task<Ingredient> GetIngredientAsync(string name)
         {
             return await _context.Ingredients.FirstOrDefaultAsync(i => i.Name == name);
         }
