@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Repositories.Interfaces;
-using MyDishesApp.Service.Service.Interfaces;
 using MyDishesApp.Service.Dtos;
+using MyDishesApp.Service.Service.Interfaces;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyDishesApp.Service.Service
 {
@@ -37,12 +37,91 @@ namespace MyDishesApp.Service.Service
             _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
         }
 
-        public async Task<IEnumerable<DishDto>> GetDishListAsync()
+        public async Task<IEnumerable<DishDto>> GetAllAsync()
         {
             var dishEntities = await _dishRepository.GetDishesAsync();
             return _mapper.Map<IEnumerable<DishDto>>(dishEntities);
         }
 
+        public async Task<DishDto> GetById(int id)
+        {
+            var dishEntity = await _dishRepository.GetDishAsync(id);
+            return _mapper.Map<DishDto>(dishEntity);
+        }
 
+        public async Task<bool> DishExists(string name, ModelStateDictionary modelState)
+        {
+            var exists = await _dishRepository.DishExists(name);
+            if (exists)
+            {
+                modelState.AddModelError("UniqueDishName", "UniqueDish|Dish name already exists. Please provide a different name.");
+            }
+
+            return exists;
+        }
+
+        public async Task<DishDto> PostAsync(DishDto dish)
+        {
+            // Map the dish to an entity
+            var dishEntity = _mapper.Map<Dish>(dish);
+
+            foreach (var ingredient in dish.Ingredients)
+            {
+                // Check if the ingredient already exists
+                var ingredientEntity = await _ingredientRepository.GetIngredientAsync(ingredient.Name);
+                if (ingredientEntity == null)
+                {
+                    ingredientEntity = _mapper.Map<Ingredient>(ingredient);
+                }
+
+                // Create the dish ingredient link
+                var dishIngredient = new DishIngredient
+                {
+                    Dish = dishEntity,
+                    Ingredient = ingredientEntity,
+                    Quantity = ingredient.Quantity
+                };
+
+                // Add the link to the dish
+                dishEntity.DishIngredients.Add(dishIngredient);
+            }
+
+            // Save the dish
+            await _dishRepository.AddDishAsync(dishEntity);
+            try
+            {
+                await _dishRepository.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, "Adding a dish failed on save", e);
+                throw;
+            }
+
+            // Map the new entity back to a dto, to be able to create a 201 response
+            return _mapper.Map<DishDto>(dishEntity);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var dishEntity = await _dishRepository.GetDishAsync(id);
+            if (dishEntity == null)
+            {
+                throw new ArgumentException($"Dish with id: '{id}' does not exist.");
+            }
+
+            _dishRepository.DeleteDish(dishEntity);
+
+            // Try to save database
+            try
+            {
+                await _dishRepository.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, "Deleting a dish failed on save.", e);
+                throw;
+            }
+        }
     }
 }
