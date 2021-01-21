@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using MyDishesApp.Service.MappingProfiles;
 
 namespace MyDishesApp.WebApi.Extensions
 {
-    public class IServiceCollectionExtensions
+    public static class IServiceCollectionExtensions
     {
         public static void AddAssembliesToAutoMapper(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(DossierMapping).Assembly, typeof(FSDataObjectDtoMapping).Assembly, typeof(SignalDataAccessMapping).Assembly);
+            services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }
     }
 }

@@ -2,8 +2,9 @@
 using MyDishesApp.Repository.Data.Entities;
 using System.Linq;
 using MyDishesApp.Repository.Data.Entities.Auth;
+using MyDishesApp.Service.Dtos;
 
-namespace MyDishesApp.Services.MappingProfiles
+namespace MyDishesApp.Service.MappingProfiles
 {
     /// <summary>
     /// Provides configuration for mappings between entities and dtos
@@ -28,7 +29,7 @@ namespace MyDishesApp.Services.MappingProfiles
             CreateMap<Ingredient, IngredientDto>()
                 .ForMember(d => d.Quantity, o => o.MapFrom(s => s.DishIngredients.Select(i => i.Quantity).FirstOrDefault()));
 
-            CreateMap<User, Dtos.Auth.User>();
+            CreateMap<User, Dtos.Auth.UserDto>();
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MyDishesApp.Service.Extensions;
 using MyDishesApp.WebApi.Authorization;
+using MyDishesApp.WebApi.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -55,7 +56,7 @@ namespace MyDishesApp.WebApi
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
 
-            services.AddAutoMapper(typeof(Startup));
+            //services.AddAutoMapper(typeof(Startup));
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -79,6 +80,7 @@ namespace MyDishesApp.WebApi
             //services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
 
             // Register the repositories
+            services.AddAssembliesToAutoMapper();
             services.AddServiceLayerWithDependencies(Configuration["ConnectionStrings:MyDishesAppDB"]);
 
             //services.AddScoped<IDishRepository, DishRepository>();

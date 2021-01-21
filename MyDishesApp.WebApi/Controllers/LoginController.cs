@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MyDishesApp.Repository.Repositories.Interfaces;
+using MyDishesApp.Service.Dtos.Auth;
 using MyDishesApp.WebApi.Authorization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -54,7 +55,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// <returns>Login response</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Login(User login)
+        public async Task<ActionResult> Login(UserDto login)
         {
             ActionResult response = Unauthorized();
             var user = await AuthenticateUser(login);
@@ -88,10 +89,10 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <param name="loginCredentials"></param>
         /// <returns>A user</returns>
-        private async Task<User> AuthenticateUser(User loginCredentials)
+        private async Task<UserDto> AuthenticateUser(UserDto loginCredentials)
         {
             var userEntity = await _userRepository.GetUser(loginCredentials.Email, loginCredentials.Password);
-            return _mapper.Map<User>(userEntity);
+            return _mapper.Map<UserDto>(userEntity);
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <param name="userInfo"></param>
         /// <returns>A token</returns>
-        private string GenerateJwtToken(User userInfo)
+        private string GenerateJwtToken(UserDto userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
