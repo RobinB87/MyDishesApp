@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyDishesApp.Repository.Extensions;
-using MyDishesApp.Service.Service;
-using MyDishesApp.Service.Service.Interfaces;
+using MyDishesApp.Service.Services;
+using MyDishesApp.Service.Services.Interfaces;
 
 namespace MyDishesApp.Service.Extensions
 {
@@ -9,8 +9,10 @@ namespace MyDishesApp.Service.Extensions
     {
         public static void AddServiceLayerWithDependencies(this IServiceCollection services, string connectionString)
         {
-            services.AddScoped<IDishService, DishService>();
             services.AddRepositoryLayer(connectionString);
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IDishService, DishService>();
+            services.AddScoped<IIngredientService, IngredientService>();
         }
     }
 }

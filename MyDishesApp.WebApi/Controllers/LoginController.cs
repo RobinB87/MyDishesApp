@@ -1,17 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using MyDishesApp.Repository.Repositories.Interfaces;
 using MyDishesApp.Service.Dtos.Auth;
+using MyDishesApp.Service.Services.Interfaces;
 using MyDishesApp.WebApi.Authorization;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MyDishesApp.WebApi.Controllers
@@ -24,53 +17,34 @@ namespace MyDishesApp.WebApi.Controllers
     [ApiController]
     public class LoginController : Controller
     {
-        private readonly ILogger _logger;
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _config;
-        private readonly IUserRepository _userRepository;
+        private readonly ILoginService _loginService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="LoginController" />
         /// </summary>
-        /// <param name="logger">The logger to use</param>
-        /// <param name="mapper">The mapper to use</param>
-        /// <param name="config">The configuration to use</param>
-        /// <param name="userRepository">The user repository</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" />is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" />is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="config" />is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="userRepository" />is null.</exception>
-        public LoginController(ILogger<DishController> logger, IMapper mapper, IConfiguration config, IUserRepository userRepository)
+        /// <param name="loginService">The login service</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="loginService" />is null.</exception>
+        public LoginController(ILoginService loginService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _loginService = loginService ?? throw new ArgumentNullException(nameof(loginService));
         }
 
         /// <summary>
         /// Method to be able to login
         /// </summary>
-        /// <param name="login"></param>
+        /// <param name="userDetails">The user details</param>
         /// <returns>Login response</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Login(UserDto login)
+        public async Task<ActionResult> Login(UserDto userDetails)
         {
-            ActionResult response = Unauthorized();
-            var user = await AuthenticateUser(login);
-
-            if (user != null)
+            var user = await _loginService.GetUser(userDetails);
+            if (user == null)
             {
-                var tokenString = GenerateJwtToken(user);
-                response = Ok(new
-                {
-                    token = tokenString,
-                    userDetails = user,
-                });
+                return Unauthorized();
             }
 
-            return response;
+            return Ok(user);
         }
 
         /// <summary>
@@ -82,45 +56,6 @@ namespace MyDishesApp.WebApi.Controllers
         public ActionResult Status()
         {
             return Ok();
-        }
-
-        /// <summary>
-        /// Authenticate the user
-        /// </summary>
-        /// <param name="loginCredentials"></param>
-        /// <returns>A user</returns>
-        private async Task<UserDto> AuthenticateUser(UserDto loginCredentials)
-        {
-            var userEntity = await _userRepository.GetUser(loginCredentials.Email, loginCredentials.Password);
-            return _mapper.Map<UserDto>(userEntity);
-        }
-
-        /// <summary>
-        /// Generate a Jwt token
-        /// </summary>
-        /// <param name="userInfo"></param>
-        /// <returns>A token</returns>
-        private string GenerateJwtToken(UserDto userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
-                new Claim("firstName", userInfo.FirstName.ToString()),
-                new Claim("role",userInfo.Role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

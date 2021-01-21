@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Repositories.Interfaces;
 using MyDishesApp.Service.Dtos;
-using MyDishesApp.Service.Service.Interfaces;
+using MyDishesApp.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MyDishesApp.Service.Service
+namespace MyDishesApp.Service.Services
 {
     public class DishService : IDishService
     {
@@ -37,18 +37,21 @@ namespace MyDishesApp.Service.Service
             _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<DishDto>> GetAllAsync()
         {
             var dishEntities = await _dishRepository.GetDishesAsync();
             return _mapper.Map<IEnumerable<DishDto>>(dishEntities);
         }
 
+        /// <inheritdoc />
         public async Task<DishDto> GetById(int id)
         {
             var dishEntity = await _dishRepository.GetDishAsync(id);
             return _mapper.Map<DishDto>(dishEntity);
         }
 
+        /// <inheritdoc />
         public async Task<bool> DishExists(string name, ModelStateDictionary modelState)
         {
             var exists = await _dishRepository.DishExists(name);
@@ -60,6 +63,7 @@ namespace MyDishesApp.Service.Service
             return exists;
         }
 
+        /// <inheritdoc />
         public async Task<DishDto> PostAsync(DishDto dish)
         {
             // Map the dish to an entity
@@ -102,6 +106,7 @@ namespace MyDishesApp.Service.Service
             return _mapper.Map<DishDto>(dishEntity);
         }
 
+        /// <inheritdoc />
         public async Task DeleteAsync(int id)
         {
             var dishEntity = await _dishRepository.GetDishAsync(id);

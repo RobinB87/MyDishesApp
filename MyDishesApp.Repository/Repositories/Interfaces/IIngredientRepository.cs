@@ -5,7 +5,7 @@ using MyDishesApp.Repository.Data.Entities;
 namespace MyDishesApp.Repository.Repositories.Interfaces
 {
     /// <summary>
-    /// The dish repository
+    /// The ingredient repository
     /// </summary>
     public interface IIngredientRepository
     {

@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Repositories.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyDishesApp.Service.Dtos;
+using MyDishesApp.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,28 +17,16 @@ namespace MyDishesApp.WebApi.Controllers
     //[Authorize]
     public class IngredientController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly ILogger _logger;
-        private readonly IIngredientRepository _ingredientRepository;
-        private readonly IDishRepository _dishRepository;
+        private readonly IIngredientService _ingredientService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="IngredientController" />
         /// </summary>
-        /// <param name="logger">The logger to use</param>
-        /// <param name="mapper">The mapper to use</param>
-        /// <param name="ingredientRepository">The repository to use</param>
-        /// <param name="dishRepository">The repository to use</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="ingredientRepository" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dishRepository" /> is null.</exception>
-        public IngredientController(ILogger<IngredientController> logger, IMapper mapper, IIngredientRepository ingredientRepository, IDishRepository dishRepository)
+        /// <param name="ingredientService">The repository to use</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="ingredientService" /> is null.</exception>
+        public IngredientController(IIngredientService ingredientService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
-            _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
+            _ingredientService = ingredientService ?? throw new ArgumentNullException(nameof(ingredientService));
         }
 
         /// <summary>
@@ -50,10 +36,9 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpGet]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients()
+        public async Task<ActionResult<IEnumerable<IngredientDto>>> GetAllAsync()
         {
-            var ingredientEntities = await _ingredientRepository.GetIngredientsAsync();
-            return _mapper.Map<IEnumerable<IngredientDto>>(ingredientEntities).ToList();
+            return (await _ingredientService.GetAllAsync()).ToList();
         }
 
         //// Get

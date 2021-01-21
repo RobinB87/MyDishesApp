@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyDishesApp.Service.Dtos;
-using MyDishesApp.Service.Service.Interfaces;
+using MyDishesApp.Service.Services.Interfaces;
 using MyDishesApp.WebApi.Authorization;
 using System;
 using System.Collections.Generic;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyDishesApp.Repository.Repositories
 {
+    /// <inheritdoc />
     public class UserRepository : IUserRepository
     {
         private readonly DishesContext _context;
