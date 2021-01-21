@@ -5,7 +5,7 @@ using Moq;
 using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Repository.Services;
 using MyDishesApp.WebApi.Controllers;
-using MyDishesApp.WebApi.Dtos;
+using MyDishesApp.Service.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

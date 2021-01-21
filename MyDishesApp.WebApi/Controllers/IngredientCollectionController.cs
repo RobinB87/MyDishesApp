@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Services;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using System;
 
 namespace MyDishesApp.WebApi.Controllers

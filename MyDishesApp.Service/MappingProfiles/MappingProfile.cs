@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MyDishesApp.Repository.Data.Entities;
-using MyDishesApp.WebApi.Dtos;
 using System.Linq;
 using MyDishesApp.Repository.Data.Entities.Auth;
 
-namespace MyDishesApp.WebApi
+namespace MyDishesApp.Services.MappingProfiles
 {
     /// <summary>
     /// Provides configuration for mappings between entities and dtos

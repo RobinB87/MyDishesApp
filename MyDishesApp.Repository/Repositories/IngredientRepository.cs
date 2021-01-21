@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyDishesApp.Repository.Services
+namespace MyDishesApp.Repository.Repositories
 {
     /// <inheritdoc />
     public class IngredientRepository : IIngredientRepository

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MyDishesApp.Repository.Services
+namespace MyDishesApp.Repository.Repositories
 {
     /// <inheritdoc />
     public class DishRepository : IDishRepository
@@ -16,7 +17,7 @@ namespace MyDishesApp.Repository.Services
         /// Initializes a new instance of <see cref="DishRepository" />
         /// </summary>
         /// <param name="context">The dishes context</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="context"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="context"/> is null</exception>
         public DishRepository(DishesContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));

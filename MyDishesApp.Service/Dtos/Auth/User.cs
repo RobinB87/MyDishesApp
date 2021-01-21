@@ -1,4 +1,4 @@
-﻿namespace MyDishesApp.WebApi.Dtos.Auth
+﻿namespace MyDishesApp.Service.Dtos.Auth
 {
     /// <summary>
     /// The user model for authorization

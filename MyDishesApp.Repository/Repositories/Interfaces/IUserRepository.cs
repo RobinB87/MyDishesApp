@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MyDishesApp.Repository.Data.Entities.Auth;
 
-namespace MyDishesApp.Repository.Services
+namespace MyDishesApp.Repository.Repositories.Interfaces
 {
     /// <summary>
     /// The user repository

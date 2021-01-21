@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Services;
-using MyDishesApp.WebApi.Dtos;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

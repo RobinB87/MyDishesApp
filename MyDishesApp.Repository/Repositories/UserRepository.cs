@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDishesApp.Repository.Data;
 using MyDishesApp.Repository.Data.Entities.Auth;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using System.Threading.Tasks;
 
-namespace MyDishesApp.Repository.Services
+namespace MyDishesApp.Repository.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -13,7 +14,6 @@ namespace MyDishesApp.Repository.Services
         /// Initializes a new instance of <see cref="UserRepository" />
         /// </summary>
         /// <param name="context">The dishes context</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="context"/> is null</exception>
         public UserRepository(DishesContext context)
         {
             _context = context;

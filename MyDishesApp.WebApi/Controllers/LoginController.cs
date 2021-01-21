@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using MyDishesApp.Repository.Services;
+using MyDishesApp.Repository.Repositories.Interfaces;
 using MyDishesApp.WebApi.Authorization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
-using MyDishesApp.WebApi.Dtos.Auth;
 
 namespace MyDishesApp.WebApi.Controllers
 {

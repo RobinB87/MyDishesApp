@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyDishesApp.WebApi.Dtos.Base
+namespace MyDishesApp.Service.Dtos.Base
 {
     /// <summary>
     /// The ingredient dto base class

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyDishesApp.WebApi.Dtos.Base
+namespace MyDishesApp.Service.Dtos.Base
 {
     /// <summary>
     /// The dish dto base class

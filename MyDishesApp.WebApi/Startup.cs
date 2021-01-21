@@ -8,8 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MyDishesApp.Repository.Data;
-using MyDishesApp.Repository.Services;
+using MyDishesApp.Service.Extensions;
 using MyDishesApp.WebApi.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -76,13 +75,15 @@ namespace MyDishesApp.WebApi
             });
 
             // Register the DbContext on the container, getting the connection string from appsettings
-            var connectionString = Configuration["ConnectionStrings:MyDishesAppDB"];
-            services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
+            //var connectionString = Configuration["ConnectionStrings:MyDishesAppDB"];
+            //services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
 
             // Register the repositories
-            services.AddScoped<IDishRepository, DishRepository>();
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddServiceLayerWithDependencies(Configuration["ConnectionStrings:MyDishesAppDB"]);
+
+            //services.AddScoped<IDishRepository, DishRepository>();
+            //services.AddScoped<IIngredientRepository, IngredientRepository>();
+            //services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

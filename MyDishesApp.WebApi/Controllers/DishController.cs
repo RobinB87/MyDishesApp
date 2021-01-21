@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDishesApp.Repository.Data.Entities;
-using MyDishesApp.Repository.Services;
-using MyDishesApp.WebApi.Dtos;
+using MyDishesApp.Repository.Repositories.Interfaces;
+using MyDishesApp.Service.Service.Interfaces;
+using MyDishesApp.WebApi.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using MyDishesApp.WebApi.Authorization;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -24,8 +24,7 @@ namespace MyDishesApp.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        private readonly IDishRepository _dishRepository;
-        private readonly IIngredientRepository _ingredientRepository;
+        private readonly IDishService _dishService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DishController" />
@@ -105,6 +104,7 @@ namespace MyDishesApp.WebApi.Controllers
 
             // Map the dish to an entity
             var dishEntity = _mapper.Map<Dish>(dish);
+
             foreach (var ingredient in dish.Ingredients)
             {
                 // Check if the ingredient already exists

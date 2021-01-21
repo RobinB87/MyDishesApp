@@ -1,6 +1,6 @@
-﻿using MyDishesApp.WebApi.Dtos.Base;
+﻿using MyDishesApp.Service.Dtos.Base;
 
-namespace MyDishesApp.WebApi.Dtos
+namespace MyDishesApp.Service.Dtos
 {
     public class IngredientForUpdateDto : IngredientAbstractBaseDto
     {
