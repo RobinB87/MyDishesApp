@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Service.Dtos;
