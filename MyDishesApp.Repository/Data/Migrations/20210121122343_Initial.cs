@@ -2,7 +2,7 @@
 
 namespace MyDishesApp.Repository.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,8 +28,7 @@ namespace MyDishesApp.Repository.Data.Migrations
                     IngredientId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false),
-                    PricePerUnit = table.Column<double>(nullable: false),
-                    Quantity = table.Column<double>(nullable: false)
+                    PricePerUnit = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,11 +36,30 @@ namespace MyDishesApp.Repository.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: false),
+                    PasswordSalt = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DishIngredients",
                 columns: table => new
                 {
                     DishId = table.Column<int>(nullable: false),
-                    IngredientId = table.Column<int>(nullable: false)
+                    IngredientId = table.Column<int>(nullable: false),
+                    Quantity = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,15 +79,36 @@ namespace MyDishesApp.Repository.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Dishes_Name",
+                table: "Dishes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DishIngredients_IngredientId",
                 table: "DishIngredients",
                 column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ingredients_Name",
+                table: "Ingredients",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "DishIngredients");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Dishes");
