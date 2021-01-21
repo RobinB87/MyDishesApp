@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Tests.Unit", "Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDishesApp.Service", "MyDishesApp.Service\MyDishesApp.Service.csproj", "{79519605-7AFE-4A02-BDA3-C5652036BBB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Tests.Unit", "Tests\Service.Tests.Unit\Service.Tests.Unit.csproj", "{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +37,17 @@ Global
 		{79519605-7AFE-4A02-BDA3-C5652036BBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79519605-7AFE-4A02-BDA3-C5652036BBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79519605-7AFE-4A02-BDA3-C5652036BBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6001D934-75E0-45CD-9192-4093F6B0F368} = {FCCD932D-187B-4766-B8D3-DC780FF0711E}
+		{3DB07906-9D6A-4AC1-8EE9-7F6A61E0444C} = {FCCD932D-187B-4766-B8D3-DC780FF0711E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C44BFF6B-E954-4D5C-84FC-2D13F5CD10BD}
