@@ -1,5 +1,7 @@
-# MyDishesApp.API
-API for MyDishesApp.Client
+# MyDishesApp
+Studying app for new techniques. 
+All comments might look chaotic, will be refactored.
+
 
 # WebApi
 In the webapi, an appsettings.json file with the following structure is required.
