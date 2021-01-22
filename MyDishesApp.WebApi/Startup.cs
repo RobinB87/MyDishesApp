@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MyDishesApp.Repository.Data;
-using MyDishesApp.Repository.Services;
+using MyDishesApp.Service.Dtos.Auth;
+using MyDishesApp.Service.Extensions;
 using MyDishesApp.WebApi.Authorization;
+using MyDishesApp.WebApi.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -30,6 +29,15 @@ namespace MyDishesApp.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var loginSettings = new LoginSettings
+            {
+                Audience = Configuration["Jwt:Audience"],
+                Issuer = Configuration["Jwt:Issuer"],
+                SecretKey = Configuration["Jwt:SecretKey"]
+            };
+
+            services.AddSingleton(loginSettings);
+
             services.AddControllers();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -43,9 +51,9 @@ namespace MyDishesApp.WebApi
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                        ValidIssuer = loginSettings.Issuer,
+                        ValidAudience = loginSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(loginSettings.SecretKey)),
                         ClockSkew = TimeSpan.Zero
                     };
                 });
@@ -56,7 +64,6 @@ namespace MyDishesApp.WebApi
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
 
-            services.AddAutoMapper(typeof(Startup));
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -75,14 +82,9 @@ namespace MyDishesApp.WebApi
                     builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
 
-            // Register the DbContext on the container, getting the connection string from appsettings
-            var connectionString = Configuration["ConnectionStrings:MyDishesAppDB"];
-            services.AddDbContext<DishesContext>(o => o.UseSqlServer(connectionString));
-
-            // Register the repositories
-            services.AddScoped<IDishRepository, DishRepository>();
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            // Register automapper and the services
+            services.AddAssembliesToAutoMapper();
+            services.AddServiceLayerWithDependencies(Configuration["ConnectionStrings:MyDishesAppDB"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

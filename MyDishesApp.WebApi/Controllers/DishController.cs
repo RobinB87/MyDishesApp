@@ -1,15 +1,12 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MyDishesApp.Repository.Data.Entities;
-using MyDishesApp.Repository.Services;
-using MyDishesApp.WebApi.Dtos;
+using MyDishesApp.Service.Dtos;
+using MyDishesApp.Service.Services.Interfaces;
+using MyDishesApp.WebApi.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using MyDishesApp.WebApi.Authorization;
 
 namespace MyDishesApp.WebApi.Controllers
 {
@@ -22,28 +19,16 @@ namespace MyDishesApp.WebApi.Controllers
     [Authorize]
     public class DishController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly ILogger _logger;
-        private readonly IDishRepository _dishRepository;
-        private readonly IIngredientRepository _ingredientRepository;
+        private readonly IDishService _dishService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DishController" />
         /// </summary>
-        /// <param name="logger">The logger to use</param>
-        /// <param name="mapper">The mapper to use</param>
-        /// <param name="dishRepository">The dish repository to use</param>
-        /// <param name="ingredientRepository">The ingredient repository to use</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="logger" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dishRepository" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="ingredientRepository" /> is null.</exception>
-        public DishController(ILogger<DishController> logger, IMapper mapper, IDishRepository dishRepository, IIngredientRepository ingredientRepository)
+        /// <param name="dishService">The dish service</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dishService" /> is null.</exception>
+        public DishController(IDishService dishService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _dishRepository = dishRepository ?? throw new ArgumentNullException(nameof(dishRepository));
-            _ingredientRepository = ingredientRepository ?? throw new ArgumentNullException(nameof(ingredientRepository));
+            _dishService = dishService ?? throw new ArgumentNullException(nameof(dishService));
         }
 
         /// <summary>
@@ -53,10 +38,9 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpGet]
         [Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<IEnumerable<DishDto>>> GetDishes()
+        public async Task<ActionResult<IEnumerable<DishDto>>> GetAllAsync()
         {
-            var dishEntities = await _dishRepository.GetDishesAsync();
-            return _mapper.Map<IEnumerable<DishDto>>(dishEntities).ToList();
+            return (await _dishService.GetAllAsync()).ToList();
         }
 
         /// <summary>
@@ -66,15 +50,15 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpGet("{id}", Name = "GetDish")]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<DishDto>> GetDish(int id)
+        public async Task<ActionResult<DishDto>> GetById(int id)
         {
-            var dishEntity = await _dishRepository.GetDishAsync(id);
-            if (dishEntity == null)
+            var dish = await _dishService.GetByIdAsync(id);
+            if (dish == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            return _mapper.Map<DishDto>(dishEntity);
+            return dish;
         }
 
         /// <summary>
@@ -85,61 +69,19 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpPost]
         //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
-        public async Task<ActionResult> AddDish(DishDto dish)
+        public async Task<ActionResult> PostAsync(DishDto dish)
         {
             if (dish == null)
             {
                 return BadRequest();
             }
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || await _dishService.DishExistsAsync(dish.Name, ModelState))
             {
                 return new UnprocessableEntityObjectResult(ModelState);
             }
 
-            if (await _dishRepository.DishExists(dish.Name))
-            {
-                ModelState.AddModelError("UniqueDishName", "UniqueDish|Dish name already exists. Please provide a different name.");
-                return new UnprocessableEntityObjectResult(ModelState);
-            }
-
-            // Map the dish to an entity
-            var dishEntity = _mapper.Map<Dish>(dish);
-            foreach (var ingredient in dish.Ingredients)
-            {
-                // Check if the ingredient already exists
-                var ingredientEntity = await _ingredientRepository.GetIngredientAsync(ingredient.Name);
-                if (ingredientEntity == null)
-                {
-                    ingredientEntity = _mapper.Map<Ingredient>(ingredient);
-                }
-
-                // Create the dish ingredient link
-                var dishIngredient = new DishIngredient
-                {
-                    Dish = dishEntity,
-                    Ingredient = ingredientEntity,
-                    Quantity = ingredient.Quantity
-                };
-
-                // Add the link to the dish
-                dishEntity.DishIngredients.Add(dishIngredient);
-            }
-
-            // Save the dish
-            await _dishRepository.AddDishAsync(dishEntity);
-            try
-            {
-                await _dishRepository.SaveAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogLevel.Error, "Adding a dish failed on save", e);
-                throw;
-            }
-
-            // Map the new entity back to a dto, to be able to create a 201 response
-            var dishToReturn = _mapper.Map<DishDto>(dishEntity);
+            var dishToReturn = await _dishService.PostAsync(dish);
             return CreatedAtRoute("GetDish",
                 new
                 {
@@ -156,89 +98,69 @@ namespace MyDishesApp.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDish(int id)
         {
-            var dishEntity = await _dishRepository.GetDishAsync(id);
-            if (dishEntity == null)
-            {
-                return NotFound();
-            }
-
-            _dishRepository.DeleteDish(dishEntity);
-
-            // Try to save database
-            try
-            {
-                await _dishRepository.SaveAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogLevel.Error, "Deleting a dish failed on save.", e);
-                throw;
-            }
-
-            // The response has no body, so therefore a 204 No Content.
+            await _dishService.DeleteAsync(id);
             return NoContent();
         }
-
-
-
-
-
-
-
-
-        //[HttpGet]
-        //public async Task<ActionResult> GetDishes()
-        //{
-        // TODO: Fix authentication
-        //    //if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
-        //    //{
-        //    //    return Forbid();
-        //    //}
-
-        //    // TODO: Add GetDishesForManager
-
-        //    var dishEntities = await _dishRepository.GetDishesAsync();
-        //    var dishes = _mapper.Map<IEnumerable<DishDto>>(dishEntities);
-        //    return Ok(dishes);
-        //}
-
-        //[HttpPatch("{dishId}")]
-        //public async Task<ActionResult> PartiallyUpdateDish(int dishId,
-        //    [FromBody] JsonPatchDocument<DishForUpdateDto> jsonPatchDocument)
-        //{
-        //    if (jsonPatchDocument == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
-        //    if (dishFromRepo == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var dishToPatch = _mapper.Map<DishForUpdateDto>(dishFromRepo);
-
-        //    // if patchDocument is malformed, this is still a client error. Use ModelState
-        //    jsonPatchDocument.ApplyTo(dishToPatch, ModelState);
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return new UnprocessableEntityObjectResult(ModelState);
-        //    }
-
-        //    if (!TryValidateModel(dishToPatch))
-        //    {
-        //        return new UnprocessableEntityObjectResult(ModelState);
-        //    }
-
-        //    _mapper.Map(dishToPatch, dishFromRepo);
-
-        //    if (!await _dishRepository.SaveAsync())
-        //    {
-        //        throw new Exception("Updating a dish failed on save.");
-        //    }
-
-        //    return NoContent();
-        //}
     }
 }
+
+
+
+
+// TO BE REFACTORED:
+
+// Old auth method:
+//[HttpGet]
+//public async Task<ActionResult> GetDishes()
+//{
+// TODO: Fix authentication
+//    //if (_userInfoService.Role != "Administrator" || !Guid.TryParse(_userInfoService.UserId, out Guid userIdAsGuid))
+//    //{
+//    //    return Forbid();
+//    //}
+
+//    // TODO: Add GetDishesForManager
+
+//    var dishEntities = await _dishRepository.GetDishesAsync();
+//    var dishes = _mapper.Map<IEnumerable<DishDto>>(dishEntities);
+//    return Ok(dishes);
+//}
+
+//[HttpPatch("{dishId}")]
+//public async Task<ActionResult> PartiallyUpdateDish(int dishId,
+//    [FromBody] JsonPatchDocument<DishForUpdateDto> jsonPatchDocument)
+//{
+//    if (jsonPatchDocument == null)
+//    {
+//        return BadRequest();
+//    }
+
+//    var dishFromRepo = await _dishRepository.GetDishAsync(dishId);
+//    if (dishFromRepo == null)
+//    {
+//        return BadRequest();
+//    }
+
+//    var dishToPatch = _mapper.Map<DishForUpdateDto>(dishFromRepo);
+
+//    // if patchDocument is malformed, this is still a client error. Use ModelState
+//    jsonPatchDocument.ApplyTo(dishToPatch, ModelState);
+//    if (!ModelState.IsValid)
+//    {
+//        return new UnprocessableEntityObjectResult(ModelState);
+//    }
+
+//    if (!TryValidateModel(dishToPatch))
+//    {
+//        return new UnprocessableEntityObjectResult(ModelState);
+//    }
+
+//    _mapper.Map(dishToPatch, dishFromRepo);
+
+//    if (!await _dishRepository.SaveAsync())
+//    {
+//        throw new Exception("Updating a dish failed on save.");
+//    }
+
+//    return NoContent();
+//}
