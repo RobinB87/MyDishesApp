@@ -9,13 +9,25 @@ using System.Reflection;
 
 namespace MyDishesApp.WebApi.Extensions
 {
+    /// <summary>
+    /// Extension for Service Collection
+    /// </summary>
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        /// Add automapper
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddAssembliesToAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }
 
+        /// <summary>
+        /// Add Swagger
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
             var openApiInfo = new OpenApiInfo
@@ -31,38 +43,6 @@ namespace MyDishesApp.WebApi.Extensions
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("webapi", openApiInfo);
-                c.IncludeXmlComments(xmlPath);
-
-                // Authorization is not enabled but for calls to FSO the token needs to be passed
-                // on. By enabling the security requirements on swagger the user can pass the token
-                // directly from swagger ui. Note that this won't affect the way .net core handles
-                // authorization just the header itself.
-               // c.AddSecurityDefinition("Bearer",
-               //new OpenApiSecurityScheme
-               //{
-               //    In = ParameterLocation.Header,
-               //    Description = "Please enter into field the word 'Bearer' following by space and JWT",
-               //    Name = "Authorization",
-               //    Type = SecuritySchemeType.ApiKey,
-               //    BearerFormat = "Bearer {token}"
-               //});
-               // c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-               // {
-               //     {
-               //         new OpenApiSecurityScheme
-               //         {
-               //             Reference = new OpenApiReference
-               //             {
-               //                 Type = ReferenceType.SecurityScheme,
-               //                 Id = "Bearer"
-               //             },
-               //             Scheme = "oauth2",
-               //             Name = "Bearer",
-               //             In = ParameterLocation.Header,
-               //         },
-               //         new List<string>()
-               //     }
-               // });
             });
         }
     }
