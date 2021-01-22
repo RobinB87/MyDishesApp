@@ -52,7 +52,7 @@ namespace MyDishesApp.WebApi.Controllers
         //[Authorize(Policy = Policies.User)]
         public async Task<ActionResult<DishDto>> GetById(int id)
         {
-            var dish = await _dishService.GetById(id);
+            var dish = await _dishService.GetByIdAsync(id);
             if (dish == null)
             {
                 return NotFound();
@@ -76,7 +76,7 @@ namespace MyDishesApp.WebApi.Controllers
                 return BadRequest();
             }
 
-            if (!ModelState.IsValid || await _dishService.DishExists(dish.Name, ModelState))
+            if (!ModelState.IsValid || await _dishService.DishExistsAsync(dish.Name, ModelState))
             {
                 return new UnprocessableEntityObjectResult(ModelState);
             }

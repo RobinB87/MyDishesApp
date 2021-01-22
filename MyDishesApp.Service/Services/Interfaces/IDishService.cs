@@ -18,12 +18,12 @@ namespace MyDishesApp.Service.Services.Interfaces
         /// <summary>
         /// Get a dish by id
         /// </summary>
-        Task<DishDto> GetById(int id);
+        Task<DishDto> GetByIdAsync(int id);
 
         /// <summary>
         /// Check if a dish exists
         /// </summary>
-        Task<bool> DishExists(string name, ModelStateDictionary modelState);
+        Task<bool> DishExistsAsync(string name, ModelStateDictionary modelState);
 
         /// <summary>
         /// Add a dish

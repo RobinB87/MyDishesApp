@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
-using MyDishesApp.Repository.Data.Entities;
 using MyDishesApp.Service.Dtos;
 using MyDishesApp.Service.Services.Interfaces;
 using MyDishesApp.WebApi.Controllers;
@@ -20,7 +20,7 @@ namespace WebApi.Tests.Unit.Controllers
                 new DishController(DishServiceMock.Object));
 
             [Fact]
-            public void ThrowsArgumentNullExceptionWhenLoggerIsNull() => Assert.Throws<ArgumentNullException>("logger",
+            public void ThrowsArgumentNullExceptionWhenLoggerIsNull() => Assert.Throws<ArgumentNullException>("dishService",
                 () => new DishController(null));
         }
 
@@ -32,35 +32,29 @@ namespace WebApi.Tests.Unit.Controllers
             public async Task CallsServiceCorrectly()
             {
                 // Arrange
-                var serviceResponse = new List<Dish> { new Dish { Name = Input } };
-                var mappedResult = new List<DishDto> { new DishDto { Name = Input } };
+                var serviceResponse = new List<DishDto> { new DishDto { Name = Input } };
 
-                DishRepositoryMock
-                    .Setup(s => s.GetDishesAsync())
+                DishServiceMock
+                    .Setup(s => s.GetAllAsync())
                     .ReturnsAsync(serviceResponse)
-                    .Verifiable();
-
-                MapperMock
-                    .Setup(m => m.Map<IEnumerable<DishDto>>(serviceResponse))
-                    .Returns(mappedResult)
                     .Verifiable();
 
                 var sut = CreateController();
 
                 // Act
-                var result = await sut.GetDishes();
+                var result = await sut.GetAllAsync();
 
                 // Assert
                 VerifyMocks();
                 Assert.NotNull(result);
-                Assert.Equal(mappedResult, result.Value);
+                Assert.Equal(serviceResponse, result.Value);
             }
 
             [Fact]
             public void LogsAndRethrowsException()
             {
                 var sut = CreateController();
-                Assert.ThrowsAsync<Exception>(() => sut.GetDishes());
+                Assert.ThrowsAsync<Exception>(() => sut.GetAllAsync());
             }
         }
 
@@ -72,35 +66,29 @@ namespace WebApi.Tests.Unit.Controllers
             public async Task CallsServiceCorrectly()
             {
                 // Arrange
-                var serviceResponse = new Dish { Name = Input };
-                var mappedResult = new DishDto { Name = Input };
+                var serviceResponse = new DishDto { Name = Input };
 
-                DishRepositoryMock
-                    .Setup(s => s.GetDishAsync(3))
+                DishServiceMock
+                    .Setup(s => s.GetByIdAsync(3))
                     .ReturnsAsync(serviceResponse)
-                    .Verifiable();
-
-                MapperMock
-                    .Setup(m => m.Map<DishDto>(serviceResponse))
-                    .Returns(mappedResult)
                     .Verifiable();
 
                 var sut = CreateController();
 
                 // Act
-                var result = await sut.GetDish(3);
+                var result = await sut.GetById(3);
 
                 // Assert
                 VerifyMocks();
                 Assert.NotNull(result);
-                Assert.Equal(mappedResult, result.Value);
+                Assert.Equal(serviceResponse, result.Value);
             }
 
             [Fact]
             public void LogsAndRethrowsException()
             {
                 var sut = CreateController();
-                Assert.ThrowsAsync<Exception>(() => sut.GetDish(3));
+                Assert.ThrowsAsync<Exception>(() => sut.GetById(3));
             }
         }
 
@@ -121,49 +109,20 @@ namespace WebApi.Tests.Unit.Controllers
                     }
                 };
 
-                var mappedIngredient = new Ingredient { Name = "Ansjovis" };
-                var mappedDish = new Dish
-                {
-                    Name = "Pizza",
-                    Country = "Italy",
-                    DishIngredients =
-                    {
-                        new DishIngredient
-                        {
-                            Ingredient = mappedIngredient
-                        }
-                    }
-                };
-
-                DishRepositoryMock
-                    .Setup(s => s.DishExists(dishToAdd.Name))
+                DishServiceMock
+                    .Setup(s => s.DishExistsAsync("Pizza", new ModelStateDictionary()))
                     .ReturnsAsync(false)
                     .Verifiable();
 
-                MapperMock
-                    .Setup(m => m.Map<Dish>(dishToAdd))
-                    .Returns(mappedDish)
-                    .Verifiable();
-
-                IngredientRepositoryMock
-                    .Setup(s => s.GetIngredientAsync(ingredientToAdd.Name))
-                    .ReturnsAsync(mappedIngredient)
-                    .Verifiable();
-
-                DishRepositoryMock
-                    .Setup(s => s.AddDishAsync(mappedDish))
-                    .Returns(Task.CompletedTask)
-                    .Verifiable();
-
-                MapperMock
-                    .Setup(m => m.Map<DishDto>(mappedDish))
-                    .Returns(dishToAdd)
+                DishServiceMock
+                    .Setup(s => s.PostAsync(dishToAdd))
+                    .ReturnsAsync(dishToAdd)
                     .Verifiable();
 
                 var sut = CreateController();
 
                 // Act
-                var result = await sut.AddDish(dishToAdd);
+                var result = await sut.PostAsync(dishToAdd);
 
                 // Assert
                 VerifyMocks();
@@ -173,13 +132,13 @@ namespace WebApi.Tests.Unit.Controllers
             [Fact]
             public void ReturnsUnprocessableEntityObjectResultWhenDishAlreadyExists()
             {
-                DishRepositoryMock
-                    .Setup(s => s.DishExists("Pizza"))
+                DishServiceMock
+                    .Setup(s => s.DishExistsAsync("Pizza", new ModelStateDictionary()))
                     .ReturnsAsync(true)
                     .Verifiable();
 
                 var sut = CreateController();
-                var result = sut.AddDish(new DishDto { Name = "Pizza" });
+                var result = sut.PostAsync(new DishDto { Name = "Pizza" });
                 Assert.IsType<UnprocessableEntityObjectResult>(result.Result);
             }
 
@@ -187,7 +146,7 @@ namespace WebApi.Tests.Unit.Controllers
             public void LogsAndRethrowsException()
             {
                 var sut = CreateController();
-                Assert.ThrowsAsync<Exception>(() => sut.AddDish(new DishDto()));
+                Assert.ThrowsAsync<Exception>(() => sut.PostAsync(new DishDto()));
             }
         }
 

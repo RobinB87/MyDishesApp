@@ -45,16 +45,16 @@ namespace MyDishesApp.Service.Services
         }
 
         /// <inheritdoc />
-        public async Task<DishDto> GetById(int id)
+        public async Task<DishDto> GetByIdAsync(int id)
         {
             var dishEntity = await _dishRepository.GetDishAsync(id);
             return _mapper.Map<DishDto>(dishEntity);
         }
 
         /// <inheritdoc />
-        public async Task<bool> DishExists(string name, ModelStateDictionary modelState)
+        public async Task<bool> DishExistsAsync(string name, ModelStateDictionary modelState)
         {
-            var exists = await _dishRepository.DishExists(name);
+            var exists = await _dishRepository.DishExistsAsync(name);
             if (exists)
             {
                 modelState.AddModelError("UniqueDishName", "UniqueDish|Dish name already exists. Please provide a different name.");

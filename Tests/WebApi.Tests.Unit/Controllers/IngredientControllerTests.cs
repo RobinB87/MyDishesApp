@@ -1,104 +1,78 @@
-﻿//using AutoMapper;
-//using Microsoft.Extensions.Logging;
-//using Moq;
-//using MyDishesApp.Repository.Data.Entities;
-//using MyDishesApp.Repository.Services;
-//using MyDishesApp.WebApi.Controllers;
-//using System;
-//using System.Collections.Generic;
-//using System.Threading.Tasks;
-//using Xunit;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using Moq;
+using MyDishesApp.Service.Dtos;
+using MyDishesApp.Service.Services.Interfaces;
+using MyDishesApp.WebApi.Controllers;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
-//namespace WebApi.Tests.Unit.Controllers
-//{
-//    public class IngredientControllerTests
-//    {
-//        public class Constructor : IngredientControllerTestBase
-//        {
-//            [Fact]
-//            public void InitializeIngredientControllerCorrectly() => Assert.NotNull(
-//                new IngredientController(LoggerMock.Object, MapperMock.Object, IngredientRepositoryMock.Object, DishRepositoryMock.Object));
+namespace WebApi.Tests.Unit.Controllers
+{
+    public class IngredientControllerTests
+    {
+        public class Constructor : IngredientControllerTestBase
+        {
+            [Fact]
+            public void InitializeIngredientControllerCorrectly() => Assert.NotNull(
+                new IngredientController(IngredientServiceMock.Object));
+            
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenIngredientServiceIsNull() => Assert.Throws<ArgumentNullException>("ingredientService",
+                () => new IngredientController(null));
+        }
 
-//            [Fact]
-//            public void ThrowsArgumentNullExceptionWhenLoggerIsNull() => Assert.Throws<ArgumentNullException>("logger",
-//                () => new IngredientController(null, MapperMock.Object, IngredientRepositoryMock.Object, DishRepositoryMock.Object));
+        public class GetIngredients : IngredientControllerTestBase
+        {
+            private const string Input = "Pizza";
 
-//            [Fact]
-//            public void ThrowsArgumentNullExceptionWhenMapperIsNull() => Assert.Throws<ArgumentNullException>("mapper",
-//                () => new IngredientController(LoggerMock.Object, null, IngredientRepositoryMock.Object, DishRepositoryMock.Object));
+            [Fact]
+            public async Task CallsServiceCorrectly()
+            {
+                // Arrange
+                var serviceResponse = new List<IngredientDto> { new IngredientDto { Name = Input } };
 
-//            [Fact]
-//            public void ThrowsArgumentNullExceptionWhenIngredientRepositoryIsNull() => Assert.Throws<ArgumentNullException>("ingredientRepository",
-//                () => new IngredientController(LoggerMock.Object, MapperMock.Object, null, DishRepositoryMock.Object));
+                IngredientServiceMock
+                    .Setup(s => s.GetAllAsync())
+                    .ReturnsAsync(serviceResponse)
+                    .Verifiable();
 
-//            [Fact]
-//            public void ThrowsArgumentNullExceptionWhenDishRepositoryIsNull() => Assert.Throws<ArgumentNullException>("dishRepository",
-//                () => new IngredientController(LoggerMock.Object, MapperMock.Object, IngredientRepositoryMock.Object, null));
-//        }
+                var sut = CreateController();
 
-//        public class GetIngredients : IngredientControllerTestBase
-//        {
-//            private const string Input = "Pizza";
+                // Act
+                var result = await sut.GetAllAsync();
 
-//            [Fact]
-//            public async Task CallsServiceCorrectly()
-//            {
-//                // Arrange
-//                var serviceResponse = new List<Ingredient> { new Ingredient { Name = Input } };
-//                var mappedResult = new List<IngredientDto> { new IngredientDto { Name = Input } };
+                // Assert
+                VerifyMocks();
+                Assert.NotNull(result);
+                Assert.Equal(serviceResponse, result.Value);
+            }
 
-//                IngredientRepositoryMock
-//                    .Setup(s => s.GetIngredientsAsync())
-//                    .ReturnsAsync(serviceResponse)
-//                    .Verifiable();
+            [Fact]
+            public void LogsAndRethrowsException()
+            {
+                var sut = CreateController();
+                Assert.ThrowsAsync<Exception>(() => sut.GetAllAsync());
+            }
+        }
 
-//                MapperMock
-//                    .Setup(m => m.Map<IEnumerable<IngredientDto>>(serviceResponse))
-//                    .Returns(mappedResult)
-//                    .Verifiable();
+        public abstract class IngredientControllerTestBase
+        {
+            protected readonly Mock<ILogger<IngredientController>> LoggerMock = new Mock<ILogger<IngredientController>>();
+            protected readonly Mock<IMapper> MapperMock = new Mock<IMapper>();
+            protected readonly Mock<IIngredientService> IngredientServiceMock = new Mock<IIngredientService>();
 
-//                var sut = CreateController();
+            protected IngredientController CreateController()
+            {
+                return new IngredientController(IngredientServiceMock.Object);
+            }
 
-//                // Act
-//                var result = await sut.GetIngredients();
-
-//                // Assert
-//                VerifyMocks();
-//                Assert.NotNull(result);
-//                Assert.Equal(mappedResult, result.Value);
-//            }
-
-//            [Fact]
-//            public void LogsAndRethrowsException()
-//            {
-//                var sut = CreateController();
-//                Assert.ThrowsAsync<Exception>(() => sut.GetIngredients());
-//            }
-//        }
-
-//        public abstract class IngredientControllerTestBase
-//        {
-//            protected readonly Mock<ILogger<IngredientController>> LoggerMock = new Mock<ILogger<IngredientController>>();
-//            protected readonly Mock<IMapper> MapperMock = new Mock<IMapper>();
-//            protected readonly Mock<IIngredientRepository> IngredientRepositoryMock = new Mock<IIngredientRepository>();
-//            protected readonly Mock<IDishRepository> DishRepositoryMock = new Mock<IDishRepository>();
-
-//            protected IngredientController CreateController()
-//            {
-//                return new IngredientController(
-//                    LoggerMock.Object,
-//                    MapperMock.Object,
-//                    IngredientRepositoryMock.Object,
-//                    DishRepositoryMock.Object);
-//            }
-
-//            protected void VerifyMocks()
-//            {
-//                LoggerMock.Verify();
-//                MapperMock.Verify();
-//                IngredientRepositoryMock.Verify();
-//                DishRepositoryMock.Verify();
-//            }
-//        }
-//    }
-//}
+            protected void VerifyMocks()
+            {
+                IngredientServiceMock.Verify();
+            }
+        }
+    }
+}

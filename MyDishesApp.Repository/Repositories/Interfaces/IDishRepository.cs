@@ -13,7 +13,7 @@ namespace MyDishesApp.Repository.Repositories.Interfaces
         /// Check if a dish exists by name
         /// </summary>
         /// <param name="name">The name</param>
-        Task<bool> DishExists(string name);
+        Task<bool> DishExistsAsync(string name);
 
         /// <summary>
         /// Get all dishes

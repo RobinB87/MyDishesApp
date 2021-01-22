@@ -24,7 +24,7 @@ namespace MyDishesApp.Repository.Repositories
         }
 
         // <inheritdoc />
-        public async Task<bool> DishExists(string name)
+        public async Task<bool> DishExistsAsync(string name)
         {
             return await _context.Dishes.AnyAsync(d =>
                 d.Name.ToLower() == name.ToLower()); 
