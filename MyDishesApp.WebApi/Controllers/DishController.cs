@@ -36,7 +36,8 @@ namespace MyDishesApp.WebApi.Controllers
         /// </summary>
         /// <returns>A list of dishes</returns>
         [HttpGet]
-        [Authorize(Policy = Policies.Admin)]
+        [Authorize(Policy = "AdminOrUser")]
+        //[Authorize(Policy = Policies.Admin)]
         //[Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<DishDto>>> GetAllAsync()
         {

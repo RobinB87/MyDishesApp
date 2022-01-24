@@ -7,6 +7,7 @@ namespace MyDishesApp.WebApi.Authorization
     /// </summary>
     public class Policies
     {
+        public const string AdminOrUser = "AdminOrUser";
         public const string Admin = "Admin";
         public const string User = "User";
 

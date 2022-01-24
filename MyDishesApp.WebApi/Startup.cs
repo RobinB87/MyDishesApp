@@ -58,10 +58,11 @@ namespace MyDishesApp.WebApi
                     };
                 });
 
-            services.AddAuthorization(config =>
+            services.AddAuthorization(options =>
             {
-                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-                config.AddPolicy(Policies.User, Policies.UserPolicy());
+                options.AddPolicy(Policies.AdminOrUser, policy => policy.RequireRole(Policies.Admin, Policies.User));
+                options.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                options.AddPolicy(Policies.User, Policies.UserPolicy());
             });
 
             services.AddMvc(setupAction =>
@@ -86,6 +87,7 @@ namespace MyDishesApp.WebApi
             services.AddAssembliesToAutoMapper();
             services.AddServiceLayerWithDependencies(_configuration["ConnectionStrings:MyDishesAppDB"]);
             services.AddSwagger(_configuration);
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,6 +124,7 @@ namespace MyDishesApp.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health").RequireAuthorization(Policies.Admin);
             });
         }
     }
